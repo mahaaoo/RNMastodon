@@ -1,0 +1,28 @@
+import { CardStyleInterpolators } from '@react-navigation/stack';
+import { StackHeaderOptions, TransitionPreset, StackNavigationOptions } from '@react-navigation/stack/lib/typescript/src/types';
+import Login from "./login";
+import WebView from "./webView";
+
+export interface RouteParams {
+  name: string;
+  component: React.ComponentType<any>;
+  options?: StackHeaderOptions | TransitionPreset | StackNavigationOptions;
+  [key: string]: any;
+}
+
+const routes: Array<RouteParams> = [
+  {
+    name: 'Login',
+    component: Login,
+    options: {
+      header: () => null,
+      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+    }
+  },
+  {
+    name: 'WebView',
+    component: WebView,
+  }
+]
+
+export default routes;
