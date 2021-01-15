@@ -11,14 +11,22 @@ const instance = axios.create({
 });
 
 // 请求拦截器
-instance.interceptors.request.use((config)=> {
+instance.interceptors.request.use((config: any)=> {
+    console.log(Stores.appStore.token);
+    
+    config.headers['Authorization'] = 'Bearer ' + Stores.appStore.token;
+    if(config.url.indexOf('http') < 0) {
+      //  如果请求url不包含主站地址，则添加
+      config.url = Stores.appStore.hostUrl + config.url;
+    }
+
     console.log('\n===================请求拦截器=================');
     console.log(`请求地址：${config.url}`);
     console.log(`请求参数：`);
     console.log(config.data);
+    console.log(config);
     console.log('============================================\n');
     
-    console.log(Stores.appStore.token);
 
     return config;
   },

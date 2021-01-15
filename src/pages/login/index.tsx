@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
-import { View, Text, TextInput, StyleSheet, SafeAreaView, Alert } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, StyleSheet, SafeAreaView } from "react-native";
 
 import Button from "../../components/Button";
 import Color from "../../config/colors";

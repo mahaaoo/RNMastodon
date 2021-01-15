@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
-import { navigationRef } from './utils/rootNavigation';
+import { navigationRef, isReadyRef } from './utils/rootNavigation';
 import Router from './router';
 import { useStores } from "./store";
-import { reset } from "./utils/rootNavigation";
 
 const App: React.FC<{}> = () => {
   const { appStore } = useStores();
@@ -15,9 +14,21 @@ const App: React.FC<{}> = () => {
     initApp()
   }, []);
 
+  useEffect(() => {
+    return () => {
+      isReadyRef.current = false
+    };
+  }, []);
+
+
   return (
     <>
-      <NavigationContainer ref={navigationRef}>
+      <NavigationContainer 
+        ref={navigationRef}
+        onReady={() => {
+          isReadyRef.current = true;
+        }}  
+      >
         <Router />
       </NavigationContainer>
     </>
