@@ -1,7 +1,9 @@
 import { CardStyleInterpolators } from '@react-navigation/stack';
 import { StackHeaderOptions, TransitionPreset, StackNavigationOptions } from '@react-navigation/stack/lib/typescript/src/types';
+import Guide from "./guide";
 import Login from "./login";
 import WebView from "./webView";
+
 
 export interface RouteParams {
   name: string;
@@ -11,6 +13,14 @@ export interface RouteParams {
 }
 
 const routes: Array<RouteParams> = [
+  {
+    name: 'Guide',
+    component: Guide,
+    options: {
+      header: () => null,
+      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+    }
+  },
   {
     name: 'Login',
     component: Login,

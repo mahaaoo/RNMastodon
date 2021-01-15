@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 const PagesRouter: React.FC<{}> = () => {
   return (
     <Stack.Navigator 
-      initialRouteName='Guide'
+      initialRouteName='TabRoute'
       screenOptions={{
         headerBackTitleVisible: false,
         headerTitleAlign: 'center',
@@ -20,13 +20,6 @@ const PagesRouter: React.FC<{}> = () => {
       headerMode="screen"
     >
       <Stack.Screen name="TabRoute" component={TabRoutes}></Stack.Screen>
-      <Stack.Screen 
-        name="Guide" 
-        component={Guide}
-        options={{ 
-          headerShown: false
-        }}
-      ></Stack.Screen>
       {routes.map((item, i) => {
         return (
           <Stack.Screen

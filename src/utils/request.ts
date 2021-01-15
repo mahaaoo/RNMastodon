@@ -4,20 +4,21 @@
  */
 
 import axios, { AxiosResponse } from 'axios';
-
+import { Stores } from "../store";
 
 const instance = axios.create({
   timeout: 30000,
 });
 
 // 请求拦截器
-instance.interceptors.request.use(
-  config => {
+instance.interceptors.request.use((config)=> {
     console.log('\n===================请求拦截器=================');
     console.log(`请求地址：${config.url}`);
     console.log(`请求参数：`);
     console.log(config.data);
     console.log('============================================\n');
+    
+    console.log(Stores.appStore.token);
 
     return config;
   },
@@ -68,18 +69,6 @@ const checkStatus = (response: Response, url: string) => {
   throw new Error(url);
 };
 
-const handleError = (error: any) => {
-  console.log("==============请求发生异常============");
-  console.log(error);
-  console.log("====================================");
-
-  // 保证为promise返回一个包含data.msg的对象，以便显示错误信息
-  return {
-    code: 9,
-    msg: '连接超时，请检查网络是否可用。',
-  };
-};
-
 const request = (url: string, method: MethodType, params?: Object | null, options?: any): Promise<any> => {
   return instance(url, {
     method: method,
@@ -89,7 +78,9 @@ const request = (url: string, method: MethodType, params?: Object | null, option
     .then((response: Response) => {
       return response.data;
     })
-    .catch((error: any) => handleError(error));  
+    .catch((error: any) => {
+      throw error;
+    });  
 };
 
 export default request;

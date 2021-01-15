@@ -4,11 +4,8 @@ import {SafeAreaView, Text, StyleSheet, View} from "react-native";
 import Button from "../../components/Button";
 import Color from "../../config/colors";
 import { reset, navigate } from "../../utils/rootNavigation";
-import LoadingModal from "../../components/Modal/loadingModal";
 
 const showLoading = () => {
-  // console.log("123");
-  // LoadingModal.getInstance().open();
   reset("TabRoute");
 }
 
@@ -29,7 +26,7 @@ const Guide: React.FC<{}> = () => {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   guide_main: {

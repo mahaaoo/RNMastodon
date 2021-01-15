@@ -19,9 +19,7 @@ export default class BaseModal {
    * 开启
    */
   open() {
-    console.log("触发");
     if (this._show === false) {
-      console.log("xianshi");
       Overlay.show(this._modal);
       this._setShow(true);
     }

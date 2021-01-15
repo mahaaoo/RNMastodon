@@ -1,31 +1,66 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, SafeAreaView } from "react-native";
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import { View, Text, TextInput, StyleSheet, SafeAreaView, Alert } from "react-native";
 
 import Button from "../../components/Button";
 import Color from "../../config/colors";
 import Screen from "../../config/screen";
 import { goBack, navigate } from "../../utils/rootNavigation";
 import { useRequest } from "../../utils/hooks";
-import { getAppConfig } from "../../server/app";
-import { allowStateChanges } from "mobx/dist/internal";
-// import { RedirectUris } from "../../config/oauth";
+import { getAppConfig, getToken } from "../../server/app";
+import ToastModal from "../../components/Modal/toastModal";
+import { useStores } from "../../store";
+import { observer } from "mobx-react";
 
-const fetchAppConfig = (host: string) => {
-  const fn = () => {
+const fetchAppConfig = () => {
+  const fn = (host: string) => {
     return getAppConfig(host);
   }
   return fn;
 }
 
-const Login: React.FC<{}> = () => {
-  const [path, setPath] = useState("");
-  const { data, run } = useRequest(fetchAppConfig("https://" + path), { manual: true });
-
-  if(data) {
-    const url = `https://${path}/oauth/authorize?scope=read%20write%20follow%20push&response_type=code&redirect_uri=${data.redirect_uri}&client_id=${data.client_id}`;
-    navigate("WebView", { initUrl: url });
+const fetchAppToken = () => {
+  const fn = (url: string, param: Object) => {
+    return getToken(url, param);
   }
-  
+  return fn
+}
+
+const Login: React.FC<{}> = () => {
+  const [path, setPath] = useState("acg.mn");
+  const { data: loginData, run: getLoginData } = useRequest(fetchAppConfig(), { manual: true });
+  const { data: tokenData, run: getTokenData } = useRequest(fetchAppToken(), { manual: true });
+  const { appStore } = useStores();
+
+  useEffect(() => {
+    if(loginData) {
+      const url = `https://${path}/oauth/authorize?scope=read%20write%20follow%20push&response_type=code&redirect_uri=${loginData?.redirect_uri}&client_id=${loginData?.client_id}`;
+      navigate("WebView", { initUrl: url, callBack: (code: string) => {
+        const params = {
+          client_id: loginData.client_id,
+          client_secret: loginData.client_secret,
+          code: code,
+        }
+        getTokenData("https://" + path, params);
+      }});
+    }
+  }, [loginData]);
+
+  useEffect(() => {
+    if(tokenData) {
+      console.log("获取到的token信息");
+      appStore.setHostUrl("https://" + path);
+      appStore.setToken(tokenData.access_token);
+    }
+  }, [tokenData])
+
+  const handleLogin = () => {
+    if (path.length > 0) {
+      getLoginData("https://" + path);
+    } else {
+      ToastModal.getInstance().show("请输入应用实例地址", 2);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.main_view}>
       <View style={styles.go_back_view}>
@@ -37,11 +72,12 @@ const Login: React.FC<{}> = () => {
         placeholder={"应用实例地址，例如：acg.mn"}
         autoFocus={true}
         onChangeText={(text) => { setPath(text)}}
+        value={path}
       />
-      <Button text={"登录"} onPress={run} style={styles.button_style} />
+      <Button text={"登录"} onPress={handleLogin} style={styles.button_style} />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   main_view: {
@@ -75,4 +111,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Login;
+export default observer(Login);

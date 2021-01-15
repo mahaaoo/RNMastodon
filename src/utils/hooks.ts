@@ -24,19 +24,20 @@ interface UseRequestOptions {
 }
 
 // 请求
-const useRequest = <T extends (...args: any) => Promise<any>>(fn: T, options?: UseRequestOptions) => {
-  const [data, setData] = useState()
+const useRequest = <T>(fn: (...args: any) => Promise<T>, options?: UseRequestOptions) => {
+  const [data, setData] = useState<T>()
   const [error, setError] = useState()
   const { current } : any = useRef({ fn });
 
-  const run = useCallback(() => {
+  const run: (...args: any) => void = useCallback((...args: any) => {
     async function getData() {
-      setData(await current.fn());
+      setData(await current.fn.call(null, ...args));
     }
     LoadingModal.getInstance().open();
     getData()
     .catch((error) => {
-      ToastModal.getInstance().show(error.message);
+      console.error(error);
+      ToastModal.getInstance().show(error.message, 2);
       setError(error);
     })
     .finally(() => {
@@ -58,7 +59,25 @@ const useRequest = <T extends (...args: any) => Promise<any>>(fn: T, options?: U
   }
 }
 
+// 定时器
+const useSetInterval = (callback: (...args: any) => void, delay: number = 1000) => {
+  const ref: any = useRef();
+
+  useEffect(() => {
+    ref.current = callback;
+  });
+
+  useEffect(() => {
+    const cb = () => {
+      ref.current();
+    };
+    const timer = setInterval(cb, delay);
+    return () => clearInterval(timer);
+  }, []);
+}
+
 export {
   useDebounce,
   useRequest,
+  useSetInterval,
 }
