@@ -21,7 +21,7 @@ const tabConfigs = {
     name: "Found",
     component: Found,
     icon: "../images/tab/search.png",
-    options: { tabBarLabel: '跨站' },
+    options: { tabBarLabel: '发现' },
   },
   notify: {
     name: "Notify",

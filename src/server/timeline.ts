@@ -1,8 +1,8 @@
 import request, { MethodType } from "../utils/request";
-import { AppInterface, AppToken } from "../config/interface";
+import { Timelines } from "../config/interface";
 
 // 获取关注人的信息
-export const homeLine = (): Promise<{}> => {
+export const homeLine = (): Promise<Array<Timelines>> => {
   const url = '/api/v1/timelines/home';
 
   return request(url, MethodType.GET);

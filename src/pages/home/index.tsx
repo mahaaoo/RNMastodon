@@ -3,9 +3,14 @@ import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { observer } from "mobx-react";
 import { useStores } from "../../store";
 
+import { Timelines } from "../../config/interface";
+
 import { navigate } from "../../utils/rootNavigation";
 import { homeLine } from "../../server/timeline";
 import { useRequest } from "../../utils/hooks";
+
+import RefreshList from "../../components/RefreshList";
+import HomeLineItem from "./homelineItem";
 
 const fetchHomeLine = () => {
   const fn = () => {
@@ -15,9 +20,12 @@ const fetchHomeLine = () => {
 }
 
 const Home: React.FC<{}> = () => {
-  const [isLogin, setIsLogin] = useState(false);
-  const { data: homeLineData, run: getHomeLineData } = useRequest(fetchHomeLine(), { manual: true });
   const {appStore} = useStores();
+
+  const [isLogin, setIsLogin] = useState(false);
+  const [listData, setListData] = useState<Timelines[]>([]);
+
+  const { data: homeLineData, run: getHomeLineData } = useRequest(fetchHomeLine(), { manual: true });
 
   useEffect(() => {
     if(appStore.hostUrl.length > 0 && appStore.token.length > 0) {
@@ -30,8 +38,7 @@ const Home: React.FC<{}> = () => {
 
   useEffect(() => {
     if(homeLineData) {
-      console.log("获取的主页信息");
-      console.log(homeLineData);
+      setListData(homeLineData);
     }
   }, [ homeLineData ]);
 
@@ -46,7 +53,10 @@ const Home: React.FC<{}> = () => {
 
   return (
     <View style={styles.main}>
-      <Text>首页信息</Text>
+      <RefreshList 
+        data={listData}
+        renderItem={({ item }) => <HomeLineItem item={item} />}
+     />
     </View>
   );
 }
