@@ -1,6 +1,7 @@
 import React from "react";
 
 import { createStackNavigator } from '@react-navigation/stack';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 import TabRoutes from "./tabRoutes";
 import Guide from "../pages/guide";
@@ -11,7 +12,7 @@ const Stack = createStackNavigator();
 const PagesRouter: React.FC<{}> = () => {
   return (
     <Stack.Navigator 
-      initialRouteName='TabRoute'
+      initialRouteName='App'
       screenOptions={{
         headerBackTitleVisible: false,
         headerTitleAlign: 'center',
@@ -19,7 +20,30 @@ const PagesRouter: React.FC<{}> = () => {
       mode="card" 
       headerMode="screen"
     >
-      <Stack.Screen name="TabRoute" component={TabRoutes}></Stack.Screen>
+      <Stack.Screen 
+        name="App" 
+        component={TabRoutes}
+        options={({route}: {route: any}) => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+
+          let title = '首页';
+          if(routeName == "Home") {
+            title = "首页";
+          }
+          if(routeName == "Found") {
+            title = "发现";
+          }
+          if(routeName == "Notify") {
+            title = "通知";
+          }
+          if(routeName == "Setting") {
+            title = "个人";
+          }
+          return {
+            title
+          }
+        }}
+      />
       {routes.map((item, i) => {
         return (
           <Stack.Screen

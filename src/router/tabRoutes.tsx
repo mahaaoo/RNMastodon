@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, Text } from "react-native";
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -15,7 +15,7 @@ const tabConfigs = {
     name: "Home",
     component: Home,
     icon: "../images/tab/home.png",
-    options: { tabBarLabel: '主页' },
+    options: { tabBarLabel: '首页' },
   },
   found: {
     name: "Found",
@@ -27,7 +27,7 @@ const tabConfigs = {
     name: "Notify",
     component: Notify,
     icon: "../images/tab/bell.png",
-    options: { tabBarLabel: '通知' },
+    options: { tabBarLabel: '通知', tabBarBadge: 3 },
   },
   setting: {
     name: "Setting",
@@ -60,12 +60,13 @@ const TabRouter: React.FC<{}> = () => {
       tabBarOptions={{
         activeTintColor: '#2593FC',
         inactiveTintColor: '#999999',
-      
       }}
     >
       {Object.keys(tabConfigs).map((key: string, i: number) => {
         // @ts-ignore
         const item = tabConfigs[key];
+
+        console.log(item);
         return (
           <TabStack.Screen
             name={item.name}
