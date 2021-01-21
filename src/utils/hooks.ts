@@ -21,10 +21,11 @@ const useDebounce = <T extends () => void>(fn: T, delay: number = 1000, dep: Arr
 
 interface UseRequestOptions {
   manual?: boolean; // 是否需要手动触发
+  loading?: Boolean;
 }
 
 // 请求
-const useRequest = <T>(fn: (...args: any) => Promise<T>, options?: UseRequestOptions) => {
+const useRequest = <T>(fn: (...args: any) => Promise<T>, options: UseRequestOptions  = { loading: true }) => {
   const [data, setData] = useState<T>()
   const [error, setError] = useState()
   const { current } : any = useRef({ fn });
@@ -33,7 +34,8 @@ const useRequest = <T>(fn: (...args: any) => Promise<T>, options?: UseRequestOpt
     async function getData() {
       setData(await current.fn.call(null, ...args));
     }
-    LoadingModal.getInstance().open();
+    if (options.loading) LoadingModal.getInstance().open();
+   
     getData()
     .catch((error) => {
       console.error(error);
@@ -41,7 +43,7 @@ const useRequest = <T>(fn: (...args: any) => Promise<T>, options?: UseRequestOpt
       setError(error);
     })
     .finally(() => {
-      LoadingModal.getInstance().close();
+      if (options.loading) LoadingModal.getInstance().close();;
     });
   }, [fn]);
 

@@ -65,8 +65,6 @@ const TabRouter: React.FC<{}> = () => {
       {Object.keys(tabConfigs).map((key: string, i: number) => {
         // @ts-ignore
         const item = tabConfigs[key];
-
-        console.log(item);
         return (
           <TabStack.Screen
             name={item.name}

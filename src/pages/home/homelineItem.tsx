@@ -1,12 +1,14 @@
 import React from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
+import { View, StyleSheet, Text, Image, Pressable } from "react-native";
 import HTML from "react-native-render-html";
+import FastImage from "react-native-fast-image";
 
 import Avatar from "../../components/Avatar";
 import { Timelines } from "../../config/interface";
 import { dateToFromNow } from "../../utils/date";
+import Colors from "../../config/colors";
+import SplitLine from "../../components/SplitLine";
 import Screen from "../../config/screen";
-
 
 interface HomeLineItemProps {
   item: Timelines,
@@ -16,39 +18,96 @@ const tagsStyles = {
   p: {
     fontSize: 16,
     lineHeight: 20
+  },
+  a: {
+    fontSize: 16,
+    lineHeight: 20,
+    textDecorationLine: 'none',
+    color: Colors.linkTagColor,
   }
 };
-
 
 const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
   const { item } = props;
 
+  const showItem = item.reblog || item ;
+
   return(
     <View style={styles.main}>
-      <View style={styles.title}>
-        <View style={styles.avatar}>
-          <Avatar url={item.account.avatar} />
+      {
+        item.reblog ?
+        <View style={styles.status}>
+          <Image source={require("../../images/turn_white.png")} style={{ width: 24, height: 22 }} />
+          <Text style={{ color: Colors.defaultWhite, marginLeft: 2 }}>{item.account.display_name}  转发了</Text>
         </View>
-        <View style={styles.name}>
-          <Text style={{ fontSize: 16 }}>{item.account.display_name}</Text>
-          <Text style={{ marginTop: 8, color: "#999" }}>{dateToFromNow(item.created_at)}</Text>
+        : null
+      }
+      {
+        item.in_reply_to_id ?
+        <View style={styles.status}>
+          <Image source={require("../../images/comment_white.png")} style={{ width: 20, height: 18 }} />
+          <Text style={{ color: Colors.defaultWhite, marginLeft: 2 }}>{item.account.display_name}  转评了</Text>
         </View>
-      </View>
-      <View style={styles.content}>
-        <HTML source={{ html: item.content }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 15 }} />
-      </View>
-      <View style={styles.tool}>
-        <View style={styles.tool_item}>
-          <Image source={require("../../images/turn.png")} style={{ width: 24, height: 22 }} />
-          <Text style={{ fontSize: 16, color: '#9f9f9f', marginLeft: 2 }}>转嘟</Text>
+        : null
+      }
+      <View style={{ marginHorizontal: 15 }}>
+        <View style={styles.title}>
+          <View style={styles.avatar}>
+            <Avatar url={showItem.account.avatar} />
+          </View>
+          <View style={styles.name}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+                <Text style={{ fontSize: 16 }}>{showItem.account.display_name}</Text>
+                <Text style={{ color: Colors.commonToolBarText }}>{`@${showItem.account.acct}`}</Text>
+              </View>
+              <Image source={require("../../images/arrow_down.png")} style={{ width: 18, height: 18 }} />
+            </View>
+            <Text style={{ marginTop: 8, color: Colors.commonToolBarText }}>{dateToFromNow(showItem.created_at)}</Text>
+          </View>
         </View>
-        <View style={styles.tool_item}>
-          <Image source={require("../../images/comment.png")} style={{ width: 20, height: 20 }} />
-          <Text style={{ fontSize: 16, color: '#9f9f9f', marginLeft: 2 }}>评论</Text>
-        </View>
-        <View style={styles.tool_item}>
-          <Image source={require("../../images/like.png")} style={{ width: 22, height: 22 }} />
-          <Text style={{ fontSize: 16, color: '#9f9f9f', marginLeft: 2 }}>赞</Text>
+        <HTML source={{ html: showItem.content }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 15 }} />
+        {
+          showItem.card && showItem.card?.image?.length > 0 ?
+          <Pressable onPress={() => {}}>
+            <FastImage
+              style={{ width: Screen.width - 30, height: showItem.card.height, borderRadius: 8 }}
+              source={{
+                  uri: showItem.card.image,
+                  priority: FastImage.priority.normal,
+              }}
+              resizeMode={FastImage.resizeMode.cover}
+            />     
+            <Image source={require("../../images/play.png")} style={styles.play_button} />
+          </Pressable>
+          : null
+        }
+        {
+          showItem.media_attachments?.map(media =>
+            <FastImage
+              style={{ width: Screen.width, height: 200, borderRadius: 8 }}
+              source={{
+                  uri: media.url,
+                  priority: FastImage.priority.normal,
+              }}
+              resizeMode={FastImage.resizeMode.cover}
+            />      
+          )
+        }
+        <SplitLine start={0} end={Screen.width - 30} />
+        <View style={styles.tool}>
+          <View style={styles.tool_item}>
+            <Image source={require("../../images/turn.png")} style={{ width: 24, height: 22 }} />
+            <Text style={styles.tool_title}>转发</Text>
+          </View>
+          <View style={styles.tool_item}>
+            <Image source={require("../../images/comment.png")} style={{ width: 20, height: 18 }} />
+            <Text style={styles.tool_title}>转评</Text>
+          </View>
+          <View style={styles.tool_item}>
+            <Image source={require("../../images/like.png")} style={{ width: 22, height: 22 }} />
+            <Text style={styles.tool_title}>赞</Text>
+          </View>
         </View>
       </View>
     </View>
@@ -56,10 +115,22 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
 }
 
 const styles = StyleSheet.create({
+  status: {
+    alignSelf:'flex-start', 
+    paddingHorizontal: 10,
+    flexDirection: 'row', 
+    backgroundColor: Colors.timelineStatusTag, 
+    marginTop: 15, 
+    height: 30 , 
+    borderTopRightRadius: 15, 
+    borderBottomRightRadius: 15,
+    alignItems: 'center',
+  },
   main: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 15,
+    flex: 1,
+    backgroundColor: Colors.defaultWhite,
     marginBottom: 10,
+    width: Screen.width
   },
   title: {
     flexDirection: 'row',
@@ -70,9 +141,7 @@ const styles = StyleSheet.create({
   },
   name: {
     justifyContent: 'center',
-  },
-  content: {
-
+    flex: 1,
   },
   tool: {
     flexDirection: 'row',
@@ -84,6 +153,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  tool_title: {
+    fontSize: 16, 
+    color: Colors.commonToolBarText, 
+    marginLeft: 2,
+  },
+  play_button: {
+    position: 'absolute', 
+    bottom: 20, 
+    right: 20, 
+    width: 55, 
+    height: 55
   }
 })
 

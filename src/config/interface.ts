@@ -19,10 +19,10 @@ export interface Timelines {
   account: Account,
   application: string,
   bookmarked: boolean,
-  card: string,
+  card: Card,
   content: string,
   created_at: string,
-  emojis: any[],
+  emojis: Emoji[],
   favourited: boolean,
   favourites_count: number,
   id: string,
@@ -33,8 +33,8 @@ export interface Timelines {
   mentions: any[],
   muted: boolean,
   poll: string,
-  reblog: string,
-  reblogged: string,
+  reblog: Timelines,
+  reblogged: boolean,
   reblogs_count: number,
   replies_count: number,
   sensitive: boolean,
@@ -67,4 +67,28 @@ export interface Account {
   statuses_count: number,
   url: string,
   username: string,
+}
+
+export interface Card {
+  author_name: string,
+  author_url: string,
+  blurhash: string,
+  description: string,
+  embed_url: string,
+  height: number,
+  html: string,
+  image: string,
+  provider_name: string,
+  provider_url: string,
+  title: string,
+  type: string,
+  url: string,
+  width: number
+}
+
+export interface Emoji {
+  shortcode: string
+  static_url: string
+  url: string
+  visible_in_picker: boolean
 }
