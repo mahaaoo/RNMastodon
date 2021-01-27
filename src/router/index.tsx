@@ -1,10 +1,11 @@
 import React from "react";
+import { View } from "react-native";
+import { Theme } from "teaset";
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 import TabRoutes from "./tabRoutes";
-import Guide from "../pages/guide";
 
 import routes from "../pages";
 
@@ -31,7 +32,11 @@ const PagesRouter: React.FC<{}> = () => {
             title = "首页";
           }
           if(routeName == "Found") {
-            title = "发现";
+            title = "";
+            return {
+              title,
+              header: () => <View style={{ height: Theme.screenInset.top, backgroundColor: '#fff' }} />
+            }
           }
           if(routeName == "Notify") {
             title = "通知";

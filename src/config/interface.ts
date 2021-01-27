@@ -17,7 +17,7 @@ export interface AppToken {
 
 export interface Timelines {
   account: Account,
-  application: string,
+  application: Application,
   bookmarked: boolean,
   card: Card,
   content: string,
@@ -91,4 +91,8 @@ export interface Emoji {
   static_url: string
   url: string
   visible_in_picker: boolean
+}
+export interface Application {
+  name: string,
+  website: string,
 }

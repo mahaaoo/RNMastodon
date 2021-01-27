@@ -7,3 +7,15 @@ export const homeLine = (params: string = ''): Promise<Array<Timelines>> => {
 
   return request(url, MethodType.GET);
 }
+
+export const publicLine = (params: string = ''): Promise<Array<Timelines>> => {
+  const url = '/api/v1/timelines/public' + params;
+
+  return request(url, MethodType.GET);
+}
+
+export const localLine = (params: string = ''): Promise<Array<Timelines>> => {
+  const url = '/api/v1/timelines/public?local=true' + params;
+  
+  return request(url, MethodType.GET);
+}

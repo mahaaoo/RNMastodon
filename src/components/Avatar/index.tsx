@@ -9,7 +9,7 @@ const Avatar: React.FC<AvatarProps> = (props) => {
   const { url } = props;
   return (
     <FastImage
-      style={{ width: 50, height: 50, borderRadius: 8 }}
+      style={{ width: 45, height: 45, borderRadius: 8 }}
       source={{
           uri: url,
           priority: FastImage.priority.normal,

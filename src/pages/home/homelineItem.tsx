@@ -33,7 +33,7 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
   const showItem = item.reblog || item ;
 
   return(
-    <View style={styles.main}>
+    <View style={styles.main} key={showItem.id}>
       {
         item.reblog ?
         <View style={styles.status}>
@@ -58,34 +58,48 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
           <View style={styles.name}>
             <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
               <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                <Text style={{ fontSize: 16 }}>{showItem.account.display_name}</Text>
+                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{showItem.account.display_name}</Text>
                 <Text style={{ color: Colors.commonToolBarText }}>{`@${showItem.account.acct}`}</Text>
               </View>
               <Image source={require("../../images/arrow_down.png")} style={{ width: 18, height: 18 }} />
             </View>
-            <Text style={{ marginTop: 8, color: Colors.commonToolBarText }}>{dateToFromNow(showItem.created_at)}</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ fontSize: 13, color: Colors.commonToolBarText, marginTop: 8 }}>
+                {dateToFromNow(showItem.created_at)}
+                {
+                  showItem.application ?
+                    <Text style={{ fontSize: 12 }}>
+                      &nbsp;&nbsp;来自
+                      <Text style={{ color: Colors.linkTagColor }}>
+                        {showItem.application.name}
+                      </Text>
+                    </Text>
+                  : <View />
+                }
+              </Text>
+            </View>
           </View>
         </View>
         <HTML source={{ html: showItem.content }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 15 }} />
         {
-          showItem.card && showItem.card?.image?.length > 0 ?
-          <Pressable onPress={() => {}}>
-            <FastImage
-              style={{ width: Screen.width - 30, height: showItem.card.height, borderRadius: 8 }}
-              source={{
-                  uri: showItem.card.image,
-                  priority: FastImage.priority.normal,
-              }}
-              resizeMode={FastImage.resizeMode.cover}
-            />     
-            <Image source={require("../../images/play.png")} style={styles.play_button} />
-          </Pressable>
-          : null
+          // showItem.card && showItem.card?.image?.length > 0 ?
+          // <Pressable onPress={() => {}}>
+          //   <FastImage
+          //     style={{ width: Screen.width - 30, minHeight: 220, maxHeight: 250, borderRadius: 8 }}
+          //     source={{
+          //         uri: showItem.card.image,
+          //         priority: FastImage.priority.normal,
+          //     }}
+          //     resizeMode={FastImage.resizeMode.cover}
+          //   />     
+          //   <Image source={require("../../images/play.png")} style={styles.play_button} />
+          // </Pressable>
+          // : null
         }
         {
           showItem.media_attachments?.map(media =>
             <FastImage
-              style={{ width: Screen.width, height: 200, borderRadius: 8 }}
+              style={{ width: Screen.width - 30, minHeight: 220, maxHeight: 250, borderRadius: 8 }}
               source={{
                   uri: media.url,
                   priority: FastImage.priority.normal,

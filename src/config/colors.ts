@@ -1,4 +1,6 @@
 export default {
+  theme: '#2593FC',
+
   defaultWhite: '#fff',
   grayTextColor: "#777",
   pageDefaultBackground: '#f5f5f5',
