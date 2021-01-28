@@ -57,9 +57,10 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
           </View>
           <View style={styles.name}>
             <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
-              <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{showItem.account.display_name}</Text>
-                <Text style={{ color: Colors.commonToolBarText }}>{`@${showItem.account.acct}`}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-end', flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode="tail">{showItem.account.display_name}
+                  <Text style={{ color: Colors.commonToolBarText, fontWeight:'normal', fontSize: 14 }} >{`@${showItem.account.acct}`}</Text>
+                </Text>
               </View>
               <Image source={require("../../images/arrow_down.png")} style={{ width: 18, height: 18 }} />
             </View>
