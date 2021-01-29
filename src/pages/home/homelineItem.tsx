@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState, useEffect} from "react";
 import { View, StyleSheet, Text, Image, Pressable } from "react-native";
 import HTML from "react-native-render-html";
 import FastImage from "react-native-fast-image";
@@ -9,10 +9,10 @@ import { dateToFromNow } from "../../utils/date";
 import Colors from "../../config/colors";
 import SplitLine from "../../components/SplitLine";
 import Screen from "../../config/screen";
+import { Account } from "../../config/interface";
 
-interface HomeLineItemProps {
-  item: Timelines,
-}
+import { replaceNameEmoji } from "../../utils/emoji";
+
 
 const tagsStyles = { 
   p: {
@@ -27,9 +27,42 @@ const tagsStyles = {
   }
 };
 
+interface HomeLineItemNameProps {
+  account: Account,
+}
+
+const HomeLineItemName:  React.FC<HomeLineItemNameProps> = (props) => {
+  const { account } = props;
+  const [name, setName] = useState([{ text: account.display_name, image: false }]);
+
+  useEffect(() => {
+    setName(replaceNameEmoji(account.display_name, account.emojis));
+  }, []);
+
+  return (
+    <>
+      {name.map((item, index) => {
+        return !item.image ? <Text key={`HomeLineItemName${index}`}>{item.text}</Text> : 
+        <FastImage
+          key={`HomeLineItemName${index}`}
+          style={{ width: 15, height: 15 }}
+          source={{
+              uri: item.text,
+              priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.cover}
+        />      
+      })}
+    </>
+  );
+}
+
+interface HomeLineItemProps {
+  item: Timelines,
+}
+
 const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
   const { item } = props;
-
   const showItem = item.reblog || item ;
 
   return(
@@ -53,12 +86,12 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
       <View style={{ marginHorizontal: 15 }}>
         <View style={styles.title}>
           <View style={styles.avatar}>
-            <Avatar url={showItem.account.avatar} />
+            <Avatar url={showItem?.account?.avatar} />
           </View>
           <View style={styles.name}>
             <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
               <View style={{ flexDirection: 'row', alignItems: 'flex-end', flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode="tail">{showItem.account.display_name}
+                <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode="tail"><HomeLineItemName account={showItem.account} />
                   <Text style={{ color: Colors.commonToolBarText, fontWeight:'normal', fontSize: 14 }} >{`@${showItem.account.acct}`}</Text>
                 </Text>
               </View>
@@ -83,23 +116,9 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
         </View>
         <HTML source={{ html: showItem.content }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 15 }} />
         {
-          // showItem.card && showItem.card?.image?.length > 0 ?
-          // <Pressable onPress={() => {}}>
-          //   <FastImage
-          //     style={{ width: Screen.width - 30, minHeight: 220, maxHeight: 250, borderRadius: 8 }}
-          //     source={{
-          //         uri: showItem.card.image,
-          //         priority: FastImage.priority.normal,
-          //     }}
-          //     resizeMode={FastImage.resizeMode.cover}
-          //   />     
-          //   <Image source={require("../../images/play.png")} style={styles.play_button} />
-          // </Pressable>
-          // : null
-        }
-        {
-          showItem.media_attachments?.map(media =>
+          showItem.media_attachments?.map((media, index) =>
             <FastImage
+              key={`showItem.media_attachments${index}`}
               style={{ width: Screen.width - 30, minHeight: 220, maxHeight: 250, borderRadius: 8 }}
               source={{
                   uri: media.url,

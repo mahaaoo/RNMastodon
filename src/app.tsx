@@ -11,7 +11,7 @@ const App: React.FC<{}> = () => {
     await appStore.initApp();
   }
   useEffect(() => {
-    initApp()
+    initApp();
   }, []);
 
   useEffect(() => {
