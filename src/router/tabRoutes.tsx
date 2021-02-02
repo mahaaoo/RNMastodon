@@ -4,10 +4,10 @@ import { Image, StyleSheet, Text } from "react-native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from "../pages/home";
-// import Found from "../pages/found";
+import Found from "../pages/found";
 import Notify from "../pages/notify";
 import Setting from "../pages/setting";
-import TopRoutes from "./topRoutes";
+// import TopRoutes from "./topRoutes";
 
 const TabStack = createBottomTabNavigator();
 
@@ -20,7 +20,7 @@ const tabConfigs = {
   },
   found: {
     name: "Found",
-    component: TopRoutes,
+    component: Found,
     icon: "../images/tab/search.png",
     options: { tabBarLabel: '发现', header: () => null },
   },

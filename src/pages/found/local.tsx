@@ -17,7 +17,11 @@ const fetchLocalLine = () => {
   return fn;
 }
 
-const Local: React.FC<{}> = () => {
+interface LocalProps {
+  tabLabel: string;
+}
+
+const Local: React.FC<LocalProps> = () => {
   const [listData, setListData] = useState<Timelines[]>([]);
   const [status, setStatus] = useState<RefreshState>(RefreshState.Idle);
 

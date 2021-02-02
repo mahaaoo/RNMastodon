@@ -25,7 +25,7 @@ interface UseRequestOptions {
 }
 
 // 请求
-const useRequest = <T>(fn: (...args: any) => Promise<T>, options: UseRequestOptions  = { loading: true }) => {
+const useRequest = <T>(fn: (...args: any) => Promise<T>, options: UseRequestOptions  = { loading: true, manual: false }) => {
   const [data, setData] = useState<T>()
   const [error, setError] = useState()
   const { current } : any = useRef({ fn });
@@ -49,7 +49,7 @@ const useRequest = <T>(fn: (...args: any) => Promise<T>, options: UseRequestOpti
 
   useEffect(() => {
     current.fn = fn;
-    if (!(options && options.manual && options.manual == true )) {
+    if (options?.manual == false && !data) {
       run();
     }
   }, [fn]);

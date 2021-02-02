@@ -17,7 +17,12 @@ const fetchPublicLine = () => {
   return fn;
 }
 
-const Public: React.FC<{}> = () => {
+
+interface PublicProps {
+  tabLabel: string;
+}
+
+const Public: React.FC<PublicProps> = () => {
   const [listData, setListData] = useState<Timelines[]>([]);
   const [status, setStatus] = useState<RefreshState>(RefreshState.Idle);
 

@@ -5,17 +5,20 @@ import FastImage from 'react-native-fast-image'
 import Screen from "../../config/screen";
 
 interface AvatarProps {
-  url: string
+  url: string,
+  size?: number,
+  borderColor?: string,
+  borderWidth?: number,
 }
 
 const Avatar: React.FC<AvatarProps> = (props) => {
   const [isLoad, setIsLoad] = useState(true);
-  const { url } = props;
+  const { url, size = 45, borderColor, borderWidth } = props;
 
   // 为请求失败的头像，添加一个默认的头像图标
   if(!isLoad) {
     return (
-      <View style={styles.default_view}>
+      <View style={[styles.default_view, {width: size, height: size, borderRadius: 8, borderColor: borderColor, borderWidth: borderWidth}]}>
         <Image source={require("../../images/user.png")} style={{ width: 25, height: 25 }} />
       </View>
     );
@@ -23,7 +26,7 @@ const Avatar: React.FC<AvatarProps> = (props) => {
 
   return (
     <FastImage
-      style={{ width: 45, height: 45, borderRadius: 8 }}
+      style={{ width: size, height: size, borderRadius: 8, borderColor: borderColor, borderWidth: borderWidth }}
       source={{
           uri: url,
           priority: FastImage.priority.normal,

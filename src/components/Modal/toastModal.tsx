@@ -1,7 +1,8 @@
 import React from 'react';
 import { Pressable, Image, Text } from "react-native";
 // @ts-ignore
-import { Overlay, Theme } from 'teaset';
+import { Overlay } from 'teaset';
+import Screen from "../../config/screen";
 
 import BaseModal from './baseModal';
 
@@ -72,7 +73,7 @@ export default class ToastModal extends BaseModal {
   };
 
   renderContent() {
-    const marginTop = Theme.screenInset.top;
+    const marginTop = Screen.top;
 
     return (
       <Pressable 

@@ -4,7 +4,6 @@ import Local from "../pages/found/local";
 import Public from "../pages/found/public";
 
 import Colors from "../config/colors";
-import { Theme } from "teaset";
 
 const Top = createMaterialTopTabNavigator();
 

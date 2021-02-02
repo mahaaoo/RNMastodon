@@ -3,7 +3,7 @@ import { StackHeaderOptions, TransitionPreset, StackNavigationOptions } from '@r
 import Guide from "./guide";
 import Login from "./login";
 import WebView from "./webView";
-
+import User from "./user";
 
 export interface RouteParams {
   name: string;
@@ -32,6 +32,13 @@ const routes: Array<RouteParams> = [
   {
     name: 'WebView',
     component: WebView,
+  },
+  {
+    name: 'User',
+    component: User,
+    options: {
+      header: () => null,
+    }
   }
 ]
 

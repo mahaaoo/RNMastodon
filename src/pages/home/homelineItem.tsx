@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect} from "react";
-import { View, StyleSheet, Text, Image, Pressable } from "react-native";
+import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import HTML from "react-native-render-html";
 import FastImage from "react-native-fast-image";
 
@@ -12,7 +12,7 @@ import Screen from "../../config/screen";
 import { Account } from "../../config/interface";
 
 import { replaceNameEmoji } from "../../utils/emoji";
-
+import { navigate } from "../../utils/rootNavigation";
 
 const tagsStyles = { 
   p: {
@@ -65,6 +65,10 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
   const { item } = props;
   const showItem = item.reblog || item ;
 
+  const handleAvatar = useCallback(() => {
+    navigate('User', { id: item.account.id })
+  }, [item]);
+
   return(
     <View style={styles.main} key={showItem.id}>
       {
@@ -85,9 +89,9 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
       }
       <View style={{ marginHorizontal: 15 }}>
         <View style={styles.title}>
-          <View style={styles.avatar}>
+          <TouchableOpacity style={styles.avatar} onPress={handleAvatar}>
             <Avatar url={showItem?.account?.avatar} />
-          </View>
+          </TouchableOpacity>
           <View style={styles.name}>
             <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
               <View style={{ flexDirection: 'row', alignItems: 'flex-end', flex: 1 }}>

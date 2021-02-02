@@ -92,6 +92,7 @@ export interface Emoji {
   url: string
   visible_in_picker: boolean
 }
+
 export interface Application {
   name: string,
   website: string,

@@ -27,3 +27,8 @@ export const getToken = (host: string, param: Object): Promise<AppToken> => {
   return request(url, MethodType.POST, params);
 }
 
+export const getAccountsById = (id: string): Promise<any> => {
+  const url = '/api/v1/accounts/' + id;
+
+  return request(url, MethodType.GET);
+}

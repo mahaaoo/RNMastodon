@@ -1,9 +1,9 @@
 import React from "react";
 import { View } from "react-native";
-import { Theme } from "teaset";
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import Screen from "../config/screen";
 
 import TabRoutes from "./tabRoutes";
 
@@ -35,7 +35,7 @@ const PagesRouter: React.FC<{}> = () => {
             title = "";
             return {
               title,
-              header: () => <View style={{ height: Theme.screenInset.top, backgroundColor: '#fff' }} />
+              header: () => <View style={{ height: Screen.top, backgroundColor: '#fff' }} />
             }
           }
           if(routeName == "Notify") {
