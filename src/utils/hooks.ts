@@ -62,7 +62,7 @@ const useRequest = <T>(fn: (...args: any) => Promise<T>, options: UseRequestOpti
 }
 
 // 定时器
-const useSetInterval = (callback: (...args: any) => void, delay: number = 1000) => {
+const useSetTimeout = (callback: (...args: any) => void, delay: number = 1000) => {
   const ref: any = useRef();
 
   useEffect(() => {
@@ -73,13 +73,13 @@ const useSetInterval = (callback: (...args: any) => void, delay: number = 1000) 
     const cb = () => {
       ref.current();
     };
-    const timer = setInterval(cb, delay);
-    return () => clearInterval(timer);
+    const timer = setTimeout(cb, delay);
+    return () => clearTimeout(timer);
   }, []);
 }
 
 export {
   useDebounce,
   useRequest,
-  useSetInterval,
+  useSetTimeout,
 }
