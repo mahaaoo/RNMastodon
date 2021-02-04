@@ -1,3 +1,7 @@
+/**
+ * 吸附在设定的距离的顶吸组件
+ */
+
 import React, {useCallback, useMemo, memo, useState} from "react";
 import { Animated, ViewStyle } from "react-native";
 

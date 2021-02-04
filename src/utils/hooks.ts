@@ -43,7 +43,7 @@ const useRequest = <T>(fn: (...args: any) => Promise<T>, options: UseRequestOpti
       setError(error);
     })
     .finally(() => {
-      if (options.loading) LoadingModal.getInstance().close();;
+      if (options.loading) LoadingModal.getInstance().close();
     });
   }, [fn]);
 

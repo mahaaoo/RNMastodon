@@ -21,7 +21,7 @@ interface LocalProps {
   tabLabel: string;
 }
 
-const Local: React.FC<LocalProps> = () => {
+const Local: React.FC<LocalProps> = (props) => {
   const [listData, setListData] = useState<Timelines[]>([]);
   const [status, setStatus] = useState<RefreshState>(RefreshState.Idle);
 
@@ -63,6 +63,7 @@ const Local: React.FC<LocalProps> = () => {
         onHeaderRefresh={handleRefresh}
         onFooterRefresh={handleLoadMore}
         refreshState={status}
+        {...props}
      />
     </View>
   );

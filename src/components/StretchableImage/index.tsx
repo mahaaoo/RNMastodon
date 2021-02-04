@@ -1,4 +1,8 @@
-import React, {useState,useRef,useCallback} from "react";
+/**
+ * 根据ScrollView或者FlatList等组件，下拉动作放大头部的图片效果
+ */
+
+import React, {useState,useRef,useCallback, useMemo} from "react";
 import { Animated, View } from "react-native";
 import Screen from "../../config/screen";
 import Colors from "../../config/colors";
@@ -6,11 +10,13 @@ import Colors from "../../config/colors";
 interface StretchableImageProps {
   imageHeight: number,
   scrollY: any,
-  url: string
+  url: string,
+  isblur?: boolean,
+  blurRadius?: number, 
 }
 
 const StretchableImage: React.FC<StretchableImageProps> = (props) => {
-  const { imageHeight, scrollY, url } = props;
+  const { imageHeight, scrollY, url, isblur = false, blurRadius = 10 } = props;
 
   const [ isShow, setShow ] = useState(false);
   const imageAnimated: any = useRef(new Animated.Value(0)).current;
@@ -25,6 +31,11 @@ const StretchableImage: React.FC<StretchableImageProps> = (props) => {
     }).start();
   }, []);
 
+  const radius = useMemo(() => {
+    if (!isblur) return 0;
+    if (isblur) return blurRadius;
+  }, [isblur, blurRadius])
+
   return (
     <>
       <Animated.View 
@@ -38,11 +49,7 @@ const StretchableImage: React.FC<StretchableImageProps> = (props) => {
       >
         <Animated.Image
           onLoad={onImageLoad}
-          blurRadius={scrollY.interpolate({
-            inputRange: [-imageHeight, 0, imageHeight],
-            outputRange: [20, 0, 20],
-            extrapolate:'clamp',
-          })}
+          blurRadius={radius}
           style={[{
             height: imageHeight,
             width: Screen.width,

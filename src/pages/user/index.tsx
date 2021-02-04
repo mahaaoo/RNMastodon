@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useCallback, useState, useMemo } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, ScrollView } from "react-native";
+import React, { useRef, useEffect, useCallback, useState } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity, Animated } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import HTML from "react-native-render-html";
 // @ts-ignore
@@ -8,16 +8,22 @@ import MyTabBar from "../../components/ScrollableTabBar/defaultTabBar";
 
 import Screen from "../../config/screen";
 import Colors from "../../config/colors";
-import { stringAddComma } from "../../utils/string";
 
-import { getAccountsById } from "../../server/app";
+import { stringAddComma } from "../../utils/string";
 import { useRequest } from "../../utils/hooks";
+import { goBack } from "../../utils/rootNavigation";
+
 import Avatar from "../../components/Avatar";
 import Button from "../../components/Button";
-import { goBack } from "../../utils/rootNavigation";
 import StickyHeader from "../../components/StickyHeader";
 import StretchableImage from "../../components/StretchableImage";
+import PullLoading from "../../components/PullLoading";
+import SlideHeader from "../../components/SlideHeader";
+
+import { getAccountsById } from "../../server/app";
+
 import LineItemName from "../home/LineItemName";
+import UseLine from "./useLine";
 
 const fetchUserById = (id: string = '') => {
   const fn = () => {
@@ -44,22 +50,48 @@ interface UserProps extends StackScreenProps<any> {
 
 const IMAGEHEIGHT = 150;
 const HEADERHEIGHT = 104;
+const PULLOFFSETY = 100;
 
 const User: React.FC<UserProps> = (props) => {
-  const { data: userData, run: getUserData } = useRequest(fetchUserById(props?.route?.params?.id));
-  const scrollY: any = useRef(new Animated.Value(0)).current;
   const [headHeight, setHeadHeight] = useState(0);
+  const { data: userData, run: getUserData } = useRequest(fetchUserById(props?.route?.params?.id), { manual: true });
+
   const handleBack = useCallback(goBack, []);
-  
+  const scrollY: any = useRef(new Animated.Value(0)).current;
+
+  const [refreshing, setRefreshing] = useState(false);
+  const [enableScrollViewScroll, setEnableScrollViewScroll] = useState(true);
+  // 设置顶吸组件所在位置
   const handleOnLayout = (e: any) => {
     const { height } = e.nativeEvent.layout;
     setHeadHeight(height + IMAGEHEIGHT - HEADERHEIGHT); 
   }
-
+  // 监听当前滚动位置 
+  const handleListener = (e: any) => {
+    const offsetY = e.nativeEvent.contentOffset.y;
+    if (offsetY <= -100 && !refreshing) {
+      setRefreshing(true);
+    }
+    if(offsetY >= headHeight && enableScrollViewScroll) {
+      setEnableScrollViewScroll(false);
+    } 
+    return null;
+  }
+  // 下拉刷新执行方法
+  const handleRefresh = useCallback(() => {
+     getUserData();
+  }, [])
+  // 请求到了数据
   useEffect(() => {
-    getUserData();
+    if(userData) {
+      setRefreshing(false);
+    }
+  }, [userData])
+
+  const handleSlide = useCallback(() => { 
+    setEnableScrollViewScroll(true);    
   }, []);
-  
+
   return (
     <>
       <Animated.ScrollView 
@@ -70,11 +102,15 @@ const User: React.FC<UserProps> = (props) => {
         bounces={true}
         onScroll={Animated.event([{ nativeEvent: 
           { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: true })
+          { useNativeDriver: true,
+            listener: handleListener
+          })
         }
-        scrollEventThrottle={1}    
+        scrollEventThrottle={1} 
+        scrollEnabled={enableScrollViewScroll}  
+        showsVerticalScrollIndicator={false}
       >
-        <StretchableImage  scrollY={scrollY} url={userData?.header} imageHeight={IMAGEHEIGHT} />
+        <StretchableImage isblur={refreshing} scrollY={scrollY} url={userData?.header} imageHeight={IMAGEHEIGHT} />
         <View style={styles.header} onLayout={handleOnLayout}>
           <View style={{ paddingHorizontal: 18 }}>
             <View style={styles.title}>
@@ -114,9 +150,11 @@ const User: React.FC<UserProps> = (props) => {
           stickyScrollY={scrollY}    // 把滑动距离传入
         >
           <ScrollableTabView style={{ backgroundColor: '#fff' }} renderTabBar={() => <MyTabBar style={{ justifyContent: 'flex-start' }} />}>
-            <View tabLabel="嘟文" >
-              <View  style={{ height: 3000 }} />
-            </View>
+            <UseLine 
+              tabLabel="嘟文"
+              scrollEnabled={!enableScrollViewScroll}  
+              onTop={handleSlide}
+            />
             <View tabLabel="嘟文和回复" />
             <View tabLabel="已置顶" />
             <View tabLabel="媒体" />
@@ -124,27 +162,19 @@ const User: React.FC<UserProps> = (props) => {
           </ScrollableTabView>
         </StickyHeader>
       </Animated.ScrollView>
-      <Animated.View 
-        style={{ 
-          width: Screen.width, 
-          height: HEADERHEIGHT, 
-          backgroundColor: "#fff", 
-          opacity: scrollY.interpolate({
-            inputRange: [0, IMAGEHEIGHT/2, IMAGEHEIGHT],
-            outputRange: [0, 0.3, 1],
-            extrapolate:'clamp',
-          }),
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <SlideHeader offsetY={IMAGEHEIGHT} scrollY={scrollY} height={HEADERHEIGHT}>
         <View style={{ marginTop: Screen.top }}>
           <LineItemName displayname={userData?.display_name} emojis={userData?.emojis} fontSize={18} />
         </View>
-      </Animated.View>
+      </SlideHeader>
+      <PullLoading 
+        scrollY={scrollY} 
+        refreshing={refreshing} 
+        top={IMAGEHEIGHT/2} 
+        left={Screen.width/2} 
+        offsetY={PULLOFFSETY}
+        onRefresh={handleRefresh}
+      />
       <TouchableOpacity style={styles.back} onPress={handleBack}>
         <Image source={require("../../images/back.png")} style={{ width: 18, height: 18 }} />
       </TouchableOpacity>
