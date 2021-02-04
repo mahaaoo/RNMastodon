@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect} from "react";
+import React, { useCallback } from "react";
 import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import HTML from "react-native-render-html";
 import FastImage from "react-native-fast-image";
@@ -9,10 +9,8 @@ import { dateToFromNow } from "../../utils/date";
 import Colors from "../../config/colors";
 import SplitLine from "../../components/SplitLine";
 import Screen from "../../config/screen";
-import { Account } from "../../config/interface";
-
-import { replaceNameEmoji } from "../../utils/emoji";
 import { navigate } from "../../utils/rootNavigation";
+import LineItemName from "./LineItemName";
 
 const tagsStyles = { 
   p: {
@@ -26,36 +24,6 @@ const tagsStyles = {
     color: Colors.linkTagColor,
   }
 };
-
-interface HomeLineItemNameProps {
-  account: Account,
-}
-
-const HomeLineItemName:  React.FC<HomeLineItemNameProps> = (props) => {
-  const { account } = props;
-  const [name, setName] = useState([{ text: account.display_name, image: false }]);
-
-  useEffect(() => {
-    setName(replaceNameEmoji(account.display_name, account.emojis));
-  }, []);
-
-  return (
-    <>
-      {name.map((item, index) => {
-        return !item.image ? <Text key={`HomeLineItemName${index}`}>{item.text}</Text> : 
-        <FastImage
-          key={`HomeLineItemName${index}`}
-          style={{ width: 15, height: 15 }}
-          source={{
-              uri: item.text,
-              priority: FastImage.priority.normal,
-          }}
-          resizeMode={FastImage.resizeMode.cover}
-        />      
-      })}
-    </>
-  );
-}
 
 interface HomeLineItemProps {
   item: Timelines,
@@ -93,12 +61,15 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
             <Avatar url={showItem?.account?.avatar} />
           </TouchableOpacity>
           <View style={styles.name}>
-            <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
-              <View style={{ flexDirection: 'row', alignItems: 'flex-end', flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode="tail"><HomeLineItemName account={showItem.account} />
-                  <Text style={{ color: Colors.commonToolBarText, fontWeight:'normal', fontSize: 14 }} >{`@${showItem.account.acct}`}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <>
+                <Text numberOfLines={1} ellipsizeMode="tail">
+                  <LineItemName displayname={showItem?.account?.display_name} emojis={showItem?.account?.emojis} />
+                  <Text style={{ color: Colors.commonToolBarText, fontSize: 14 }} >
+                    {`@${showItem.account.acct}`}
+                  </Text>
                 </Text>
-              </View>
+              </>
               <Image source={require("../../images/arrow_down.png")} style={{ width: 18, height: 18 }} />
             </View>
             <View style={{ flexDirection: 'row' }}>

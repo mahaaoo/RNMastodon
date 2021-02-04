@@ -295,6 +295,10 @@ export const replaceContentEmoji = (text: string, emojis: Emoji[]) => {
 }
 
 export const replaceNameEmoji = (text: string, emojis: Emoji[]) => {
+  if(!text || text.length == 0 || !emojis) {
+    return [];
+  }
+
   if(text.indexOf(":") == -1) {
     return [{
       text: text,

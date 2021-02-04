@@ -16,7 +16,7 @@ const Avatar: React.FC<AvatarProps> = (props) => {
   const { url, size = 45, borderColor, borderWidth } = props;
 
   // 为请求失败的头像，添加一个默认的头像图标
-  if(!isLoad) {
+  if(!isLoad || !url || url.length == 0) {
     return (
       <View style={[styles.default_view, {width: size, height: size, borderRadius: 8, borderColor: borderColor, borderWidth: borderWidth}]}>
         <Image source={require("../../images/user.png")} style={{ width: 25, height: 25 }} />
@@ -32,6 +32,7 @@ const Avatar: React.FC<AvatarProps> = (props) => {
           priority: FastImage.priority.normal,
       }}
       onError={() => {
+        console.log("加载失败");
         setIsLoad(false);   
       }}
       resizeMode={FastImage.resizeMode.contain}
