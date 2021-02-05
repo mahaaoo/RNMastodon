@@ -20,14 +20,23 @@ import StretchableImage from "../../components/StretchableImage";
 import PullLoading from "../../components/PullLoading";
 import SlideHeader from "../../components/SlideHeader";
 
-import { getAccountsById } from "../../server/app";
+import { getAccountsById, getStatusesById } from "../../server/account";
 
 import LineItemName from "../home/LineItemName";
 import UseLine from "./useLine";
+import { Timelines } from "../../config/interface";
+import { RefreshState } from "../../components/RefreshList";
 
 const fetchUserById = (id: string = '') => {
   const fn = () => {
     return getAccountsById(id);
+  }
+  return fn;
+}
+
+const fetchStatusById = (id: string = "") => {
+  const fn = (param: string) => {
+    return getStatusesById(id, param);
   }
   return fn;
 }
@@ -48,19 +57,42 @@ const tagsStyles = {
 interface UserProps extends StackScreenProps<any> {
 }
 
-const IMAGEHEIGHT = 150;
-const HEADERHEIGHT = 104;
-const PULLOFFSETY = 100;
+const IMAGEHEIGHT = 150; // 顶部下拉放大图片的高度
+const HEADERHEIGHT = 104; // 上滑逐渐显示的Header的高度
+const PULLOFFSETY = 100; // 下拉刷新的触发距离
 
 const User: React.FC<UserProps> = (props) => {
-  const [headHeight, setHeadHeight] = useState(0);
-  const { data: userData, run: getUserData } = useRequest(fetchUserById(props?.route?.params?.id), { manual: true });
+  const scrollY: any = useRef(new Animated.Value(0)).current; //最外层ScrollView的滑动距离
 
+  const { data: userData, run: getUserData } = useRequest(fetchUserById(props?.route?.params?.id), { manual: true, loading: true }); // 获取用户的个人信息
+  const { data: userStatus, run: getUserStatus } = useRequest(fetchStatusById(props?.route?.params?.id), { loading: false, manual: true }); // 获取用户发表过的推文
+
+  const [headHeight, setHeadHeight] = useState(0); // 为StickyHead计算顶吸到顶端的距离
+  const [refreshing, setRefreshing] = useState(false); // 是否处于下拉加载的状态
+  const [enableScrollViewScroll, setEnableScrollViewScroll] = useState(true); // 最外层ScrollView是否可以滚动
+  const [listData, setListData] = useState<Timelines[]>([]); // 内嵌的FlatList数据源
+  const [listStatus, setListStatus] = useState<RefreshState>(RefreshState.Idle); // 内嵌的FlatList的当前状态
+
+  useEffect(() => {
+    getUserData();
+    getUserStatus();
+  }, [refreshing]);
+
+  useEffect(() => {
+    // 每当请求了新数据，都将下拉刷新状态设置为false
+    setRefreshing(false);
+    if(userStatus) {
+      if (listStatus === RefreshState.Idle) {
+        setListData(userStatus);
+      }
+      if(listStatus === RefreshState.FooterRefreshing) {
+        setListData(listData => listData.concat(userStatus));
+        setListStatus(RefreshState.Idle);
+      }
+    }
+  }, [userStatus, userData])
+  // 返回上一页
   const handleBack = useCallback(goBack, []);
-  const scrollY: any = useRef(new Animated.Value(0)).current;
-
-  const [refreshing, setRefreshing] = useState(false);
-  const [enableScrollViewScroll, setEnableScrollViewScroll] = useState(true);
   // 设置顶吸组件所在位置
   const handleOnLayout = (e: any) => {
     const { height } = e.nativeEvent.layout;
@@ -78,19 +110,21 @@ const User: React.FC<UserProps> = (props) => {
     return null;
   }
   // 下拉刷新执行方法
-  const handleRefresh = useCallback(() => {
-     getUserData();
-  }, [])
-  // 请求到了数据
-  useEffect(() => {
-    if(userData) {
-      setRefreshing(false);
-    }
-  }, [userData])
-
+  // 2021-02-05 废弃：将刷新触发方法，放到useEffect中，监听refreshing状态
+  // const handleRefresh = useCallback(() => {
+  //   console.log("下拉刷新");
+  // }, [])
+  
+  // 当嵌套在里面内容滑动到顶端，将外层的ScrollView设置为可滑动状态
   const handleSlide = useCallback(() => { 
     setEnableScrollViewScroll(true);    
   }, []);
+  // 内部FlatList的上拉加载更多
+  const handleLoadMore = useCallback(() => {
+    setListStatus(status => status = RefreshState.FooterRefreshing);
+    const maxId = listData[listData.length - 1].id;
+    getUserStatus(`?max_id=${maxId}`);
+  }, [listStatus, listData]);
 
   return (
     <>
@@ -154,6 +188,9 @@ const User: React.FC<UserProps> = (props) => {
               tabLabel="嘟文"
               scrollEnabled={!enableScrollViewScroll}  
               onTop={handleSlide}
+              dataSource={listData}
+              loadMore={handleLoadMore}
+              state={listStatus}
             />
             <View tabLabel="嘟文和回复" />
             <View tabLabel="已置顶" />
@@ -173,7 +210,6 @@ const User: React.FC<UserProps> = (props) => {
         top={IMAGEHEIGHT/2} 
         left={Screen.width/2} 
         offsetY={PULLOFFSETY}
-        onRefresh={handleRefresh}
       />
       <TouchableOpacity style={styles.back} onPress={handleBack}>
         <Image source={require("../../images/back.png")} style={{ width: 18, height: 18 }} />

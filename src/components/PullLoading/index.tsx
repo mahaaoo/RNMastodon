@@ -11,7 +11,7 @@ interface PullLoadingProps {
   left: number,
   offsetY: number,
   size?: number,
-  onRefresh: () => void;
+  onRefresh?: () => void;
 }
 
 const PullLoading: React.FC<PullLoadingProps> = memo((props) => {
