@@ -11,6 +11,8 @@ import SplitLine from "../../components/SplitLine";
 import Screen from "../../config/screen";
 import { navigate } from "../../utils/rootNavigation";
 import LineItemName from "./LineItemName";
+import NinePicture from "../../components/NinePicture";
+import SpacingBox from "../../components/SpacingBox";
 
 const tagsStyles = { 
   p: {
@@ -90,19 +92,7 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
           </View>
         </View>
         <HTML source={{ html: showItem.content }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 15 }} />
-        {
-          showItem.media_attachments?.map((media, index) =>
-            <FastImage
-              key={`showItem.media_attachments${index}`}
-              style={{ width: Screen.width - 30, minHeight: 220, maxHeight: 250, borderRadius: 8 }}
-              source={{
-                  uri: media.url,
-                  priority: FastImage.priority.normal,
-              }}
-              resizeMode={FastImage.resizeMode.cover}
-            />      
-          )
-        }
+        <NinePicture imageList={showItem.media_attachments} />        
         <SplitLine start={0} end={Screen.width - 30} />
         <View style={styles.tool}>
           <View style={styles.tool_item}>
