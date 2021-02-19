@@ -20,24 +20,16 @@ import StretchableImage from "../../components/StretchableImage";
 import PullLoading from "../../components/PullLoading";
 import SlideHeader from "../../components/SlideHeader";
 
-import { getAccountsById, getStatusesById } from "../../server/account";
+import { getAccountsById } from "../../server/account";
 
 import LineItemName from "../home/LineItemName";
 import UseLine from "./useLine";
-import { Timelines } from "../../config/interface";
-import { RefreshState } from "../../components/RefreshList";
+import Favourites from "./favourites";
 import { replaceContentEmoji } from "../../utils/emoji";
 
 const fetchUserById = (id: string = '') => {
   const fn = () => {
     return getAccountsById(id);
-  }
-  return fn;
-}
-
-const fetchStatusById = (id: string = "") => {
-  const fn = (param: string) => {
-    return getStatusesById(id, param);
   }
   return fn;
 }
@@ -66,38 +58,17 @@ const User: React.FC<UserProps> = (props) => {
   const scrollY: any = useRef(new Animated.Value(0)).current; //最外层ScrollView的滑动距离
 
   const { data: userData, run: getUserData } = useRequest(fetchUserById(props?.route?.params?.id), { manual: true, loading: true }); // 获取用户的个人信息
-  const { data: userStatus, run: getUserStatus } = useRequest(fetchStatusById(props?.route?.params?.id), { loading: false, manual: true }); // 获取用户发表过的推文
-
+  
   const [headHeight, setHeadHeight] = useState(0); // 为StickyHead计算顶吸到顶端的距离
   const [refreshing, setRefreshing] = useState(false); // 是否处于下拉加载的状态
   const [enableScrollViewScroll, setEnableScrollViewScroll] = useState(true); // 最外层ScrollView是否可以滚动
-  const [listData, setListData] = useState<Timelines[]>([]); // 内嵌的FlatList数据源
-  const [listStatus, setListStatus] = useState<RefreshState>(RefreshState.Idle); // 内嵌的FlatList的当前状态
+  
+  const [currentTab, setCurrentTab] = useState(0);
 
   useEffect(() => {
     getUserData();
-    getUserStatus();
   }, []);
-  // 下拉刷新只刷新推文状态，暂不刷新用户信息 
-  useEffect(() => {
-    if(refreshing == true) {
-      getUserStatus();
-    }
-  }, [refreshing]);
 
-  useEffect(() => {
-    // 每当请求了新数据，都将下拉刷新状态设置为false
-    if(userStatus) {
-      if (listStatus === RefreshState.Idle) {
-        setListData(userStatus);
-      }
-      if(listStatus === RefreshState.FooterRefreshing) {
-        setListData(listData => listData.concat(userStatus));
-        setListStatus(RefreshState.Idle);
-      }
-      setRefreshing(false);
-    }
-  }, [userStatus, userData])
   // 返回上一页
   const handleBack = useCallback(goBack, []);
   // 设置顶吸组件所在位置
@@ -108,7 +79,7 @@ const User: React.FC<UserProps> = (props) => {
   // 监听当前滚动位置 
   const handleListener = (e: any) => {
     const offsetY = e.nativeEvent.contentOffset.y;
-    if (offsetY <= -100 && !refreshing) {
+    if (offsetY <= -PULLOFFSETY && !refreshing) {
       setRefreshing(true);
     }
     if(offsetY >= headHeight && enableScrollViewScroll) {
@@ -126,12 +97,10 @@ const User: React.FC<UserProps> = (props) => {
   const handleSlide = useCallback(() => { 
     setEnableScrollViewScroll(true);    
   }, []);
-  // 内部FlatList的上拉加载更多
-  const handleLoadMore = useCallback(() => {
-    setListStatus(status => status = RefreshState.FooterRefreshing);
-    const maxId = listData[listData.length - 1].id;
-    getUserStatus(`?max_id=${maxId}`);
-  }, [listStatus, listData]);
+
+  const handleFinish = useCallback(() => {
+    setRefreshing(false);
+  }, []);
 
   return (
     <>
@@ -190,24 +159,35 @@ const User: React.FC<UserProps> = (props) => {
           stickyHeaderY={headHeight} // 把头部高度传入
           stickyScrollY={scrollY}    // 把滑动距离传入
         >
-          <ScrollableTabView style={{ backgroundColor: '#fff' }} renderTabBar={() => <MyTabBar style={{ justifyContent: 'flex-start' }} />}>
+          <ScrollableTabView 
+            style={{ backgroundColor: '#fff' }} 
+            renderTabBar={() => <MyTabBar style={{ justifyContent: 'flex-start' }}/>}
+            onChangeTab={(index: any) => { setCurrentTab(index.i)}}
+            >
             <UseLine 
               tabLabel="嘟文"
               scrollEnabled={!enableScrollViewScroll}  
               onTop={handleSlide}
-              dataSource={listData}
-              loadMore={handleLoadMore}
-              state={listStatus}
+              id={props?.route?.params?.id}
+              refreshing={refreshing}
+              onFinish={handleFinish}
             />
             <View tabLabel="嘟文和回复" />
             <View tabLabel="已置顶" />
             <View tabLabel="媒体" />
-            <View tabLabel="喜欢" />
+            <Favourites 
+              tabLabel="喜欢"
+              scrollEnabled={!enableScrollViewScroll}  
+              onTop={handleSlide}
+              refreshing={refreshing}
+              onFinish={handleFinish}
+              id={props?.route?.params?.id}
+            />
           </ScrollableTabView>
         </StickyHeader>
       </Animated.ScrollView>
       <SlideHeader offsetY={IMAGEHEIGHT} scrollY={scrollY} height={HEADERHEIGHT}>
-        <View style={{ marginTop: Screen.top }}>
+        <View style={{ marginTop: Screen.top, flexDirection: 'row' }}>
           <LineItemName displayname={userData?.display_name} emojis={userData?.emojis} fontSize={18} />
         </View>
       </SlideHeader>

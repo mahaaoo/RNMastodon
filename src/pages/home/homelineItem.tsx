@@ -37,7 +37,7 @@ const renderer = {
 		return (
       <Image
         key={htmlAttribs.src}
-        style={{height: 16, width: 16 }}
+        style={{height: 16, width: 16, alignSelf: 'stretch' }}
         resizeMode='contain'
         source={{uri: htmlAttribs.src}}
       />

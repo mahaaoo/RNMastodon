@@ -7,56 +7,56 @@ import HomeLineItem from "../home/homelineItem";
 import RefreshList, { RefreshState } from "../../components/RefreshList";
 import { useRequest } from "../../utils/hooks";
 
-import { getAccountsById, getStatusesById, getFavourites } from "../../server/account";
+import { getFavouritesById } from "../../server/account";
 
-const fetchStatusById = (id: string = "") => {
+const fetchStatusById = () => {
   const fn = (param: string) => {
-    return getStatusesById(id, param);
+    return getFavouritesById(param);
   }
   return fn;
 }
 
-interface UserLineProps {
+interface FavouritiesProps {
   tabLabel: string;
   scrollEnabled: boolean,
   onTop: () => void,
-  id: string,
   refreshing: boolean,
+  id: string,
   onFinish: () => void,
 }
 
-const UserLine: React.FC<UserLineProps> = (props) => {
-  const { scrollEnabled, onTop, id, refreshing, onFinish } = props;
+const Favourities: React.FC<FavouritiesProps> = (props) => {
+  const { scrollEnabled, onTop, refreshing, onFinish, id } = props;
 
-  const { data: userStatus, run: getUserStatus } = useRequest(fetchStatusById(id), { loading: false, manual: true }); // 获取用户发表过的推文
+  const { data: favourities, run: getFavourities } = useRequest(fetchStatusById(), { loading: false, manual: true }); // 获取用户发表过的推文
   const [dataSource, setDataSource] = useState<Timelines[]>([]);
   const [listStatus, setListStatus] = useState<RefreshState>(RefreshState.Idle); // 内嵌的FlatList的当前状态
   const table: any = useRef(null);
   
   useEffect(() => {
-    getUserStatus();
+    getFavourities();
   }, []);
 
   useEffect(() => {
     if(refreshing) {
-      getUserStatus();
+      getFavourities();
     }
   }, [refreshing])
 
   useEffect(() => {
     // 每当请求了新数据，都将下拉刷新状态设置为false
-    if(userStatus) {
+    if(favourities) {
       if (listStatus === RefreshState.Idle) {
-        setDataSource(userStatus);
+        setDataSource(favourities);
       }
       if(listStatus === RefreshState.FooterRefreshing) {
-        setDataSource(listData => listData.concat(userStatus));
+        setDataSource(listData => listData.concat(favourities));
         setListStatus(RefreshState.Idle);
       }
       // 请求结束，通知父组件完成本次刷新
       onFinish && onFinish();
     }
-  }, [userStatus])
+  }, [favourities])
 
   const handleListener = (e: any) => {
     const offsetY = e.nativeEvent.contentOffset.y;
@@ -71,7 +71,7 @@ const UserLine: React.FC<UserLineProps> = (props) => {
   const handleLoadMore = useCallback(() => {
     setListStatus(status => status = RefreshState.FooterRefreshing);
     const maxId = dataSource[dataSource.length - 1].id;
-    getUserStatus(`?max_id=${maxId}`);
+    getFavourities(`?max_id=${maxId}`);
   }, []);
 
   return (
@@ -100,9 +100,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.pageDefaultBackground,
-    height: Screen.height - 154, // 154是怎么的
+    height: Screen.height - 154,
     width: Screen.width
   }
 });
 
-export default UserLine;
+export default Favourities;

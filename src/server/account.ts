@@ -12,3 +12,10 @@ export const getStatusesById = (id: string, params: string = ''): Promise<Array<
 
   return request(url, MethodType.GET);
 }
+
+// /api/v1/favourites
+export const getFavouritesById = (params: string = ''): Promise<Array<Timelines>> => {
+  const url = '/api/v1/favourites' + params;
+
+  return request(url, MethodType.GET);
+}
