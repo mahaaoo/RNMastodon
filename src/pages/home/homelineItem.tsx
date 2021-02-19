@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import HTML from "react-native-render-html";
-import FastImage from "react-native-fast-image";
 
 import Avatar from "../../components/Avatar";
 import { Timelines } from "../../config/interface";
@@ -12,7 +11,7 @@ import Screen from "../../config/screen";
 import { navigate } from "../../utils/rootNavigation";
 import LineItemName from "./LineItemName";
 import NinePicture from "../../components/NinePicture";
-import SpacingBox from "../../components/SpacingBox";
+import { replaceContentEmoji } from "../../utils/emoji";
 
 const tagsStyles = { 
   p: {
@@ -25,6 +24,25 @@ const tagsStyles = {
     textDecorationLine: 'none',
     color: Colors.linkTagColor,
   }
+};
+
+/**
+ * TODO: 推文中文中的emoji，在转换为图片之后会单独占据一行
+ * react-native-render-html在未来6.0版本会添加image的inline设置
+ * https://github.com/meliorence/react-native-render-html/issues/428
+ */
+
+const renderer = {
+	img: (htmlAttribs: any) => {
+		return (
+      <Image
+        key={htmlAttribs.src}
+        style={{height: 16, width: 16 }}
+        resizeMode='contain'
+        source={{uri: htmlAttribs.src}}
+      />
+    )
+	},
 };
 
 interface HomeLineItemProps {
@@ -63,26 +81,26 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
             <Avatar url={showItem?.account?.avatar} />
           </TouchableOpacity>
           <View style={styles.name}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ flex: 1 }}>
                 <Text numberOfLines={1} ellipsizeMode="tail">
                   <LineItemName displayname={showItem?.account?.display_name} emojis={showItem?.account?.emojis} />
                   <Text style={{ color: Colors.commonToolBarText, fontSize: 14 }} >
-                    {`@${showItem.account.acct}`}
+                    {`@${showItem?.account?.acct}`}
                   </Text>
                 </Text>
-              </>
+              </View>
               <Image source={require("../../images/arrow_down.png")} style={{ width: 18, height: 18 }} />
             </View>
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ fontSize: 13, color: Colors.commonToolBarText, marginTop: 8 }}>
                 {dateToFromNow(showItem.created_at)}
                 {
-                  showItem.application ?
+                  showItem?.application ?
                     <Text style={{ fontSize: 12 }}>
                       &nbsp;&nbsp;来自
                       <Text style={{ color: Colors.linkTagColor }}>
-                        {showItem.application.name}
+                        {showItem?.application?.name}
                       </Text>
                     </Text>
                   : <View />
@@ -91,7 +109,12 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
             </View>
           </View>
         </View>
-        <HTML source={{ html: showItem.content }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 15 }} />
+        <HTML 
+          source={{ html: replaceContentEmoji(showItem?.content, showItem?.emojis) }} 
+          tagsStyles={tagsStyles} 
+          containerStyle={{ paddingVertical: 15 }}
+          renderers={renderer}
+        />
         <NinePicture imageList={showItem.media_attachments} />        
         <SplitLine start={0} end={Screen.width - 30} />
         <View style={styles.tool}>

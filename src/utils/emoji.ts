@@ -268,33 +268,44 @@ class Mint extends Tree {
   }
 }
 
+/**
+ * 将正文中的emoji替换为<img>
+ * @param text 正文
+ * @param emojis emojis数组
+ */
+export const replaceContentEmoji = (text: string, emojis: Emoji[]): string => {
+  if(!text || text.length == 0 || !emojis) {
+    return "";
+  }
 
-export const replaceContentEmoji = (text: string, emojis: Emoji[]) => {
-  let m = new Mint([
-    {
-      word: "淘宝",
-      toWord: "taobao",
-    },
-    {
-      word: "京东",
-      toWord: "jingdong",
-    },
-    {
-      word: "拼多多",
-      toWord: "pinduoduo",
-    },
-  ])
+  if(text.indexOf(":") == -1) {
+    return text;
+  } 
 
-  console.log(m.filterSync('双十一在淘宝买东西，618在京东买东西，当然你也可以在拼多多买东西。'))
-  /* { 
-      text: '双十一在**买东西，618在**买东西，当然你也可以在***买东西。',
-      filter: [ '淘宝', '京东', '拼多多' ],
-      pass: false
-  } */
+  const ACList: Array<EmojiType> = [];
+
+  // 将正文中的emoji字段替换为<img>标签
+  for (let item of emojis) {
+    ACList.push({
+      word: `:${item.shortcode}:`,
+      toWord: `<img src=${item.url} width=16 height=16 style="vertical-align:middle;" />`
+    })
+  }
+
+  const m = new Mint(ACList);
   
+  const replaced: FilterValue = m.filterSync(text);
+
+  return replaced.text;
 }
 
-export const replaceNameEmoji = (text: string, emojis: Emoji[]) => {
+/**
+ * 将文本中的emoji替换为以类型分类的数组，可以按顺序渲染不同的内容
+ * @param text 正文
+ * @param emojis emojis数组
+ */
+
+export const replaceNameEmoji = (text: string, emojis: Emoji[]): any[] => {
   if(!text || text.length == 0 || !emojis) {
     return [];
   }

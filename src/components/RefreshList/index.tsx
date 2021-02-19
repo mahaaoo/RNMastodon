@@ -22,6 +22,7 @@ interface RefreshListProps extends FlatListProps<any> {
   footerFailureText?: string,
   footerNoMoreDataText?: string,
   canRefresh?: boolean,
+  ref?: any,
 }
 
 const RefreshList: React.FC<RefreshListProps> = (props) => {
@@ -36,6 +37,7 @@ const RefreshList: React.FC<RefreshListProps> = (props) => {
     footerFailureText,
     footerNoMoreDataText,
     canRefresh,
+    ref,
     ...options
   } = props;
 
@@ -121,6 +123,7 @@ const RefreshList: React.FC<RefreshListProps> = (props) => {
 
   return (
     <FlatList
+      ref={ref}
       data={data}
       onEndReached={endReached}
       onRefresh={headerRefresh}

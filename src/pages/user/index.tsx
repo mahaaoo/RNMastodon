@@ -26,6 +26,7 @@ import LineItemName from "../home/LineItemName";
 import UseLine from "./useLine";
 import { Timelines } from "../../config/interface";
 import { RefreshState } from "../../components/RefreshList";
+import { replaceContentEmoji } from "../../utils/emoji";
 
 const fetchUserById = (id: string = '') => {
   const fn = () => {
@@ -76,11 +77,16 @@ const User: React.FC<UserProps> = (props) => {
   useEffect(() => {
     getUserData();
     getUserStatus();
+  }, []);
+  // 下拉刷新只刷新推文状态，暂不刷新用户信息 
+  useEffect(() => {
+    if(refreshing == true) {
+      getUserStatus();
+    }
   }, [refreshing]);
 
   useEffect(() => {
     // 每当请求了新数据，都将下拉刷新状态设置为false
-    setRefreshing(false);
     if(userStatus) {
       if (listStatus === RefreshState.Idle) {
         setListData(userStatus);
@@ -89,6 +95,7 @@ const User: React.FC<UserProps> = (props) => {
         setListData(listData => listData.concat(userStatus));
         setListStatus(RefreshState.Idle);
       }
+      setRefreshing(false);
     }
   }, [userStatus, userData])
   // 返回上一页
@@ -114,7 +121,7 @@ const User: React.FC<UserProps> = (props) => {
   // const handleRefresh = useCallback(() => {
   //   console.log("下拉刷新");
   // }, [])
-  
+
   // 当嵌套在里面内容滑动到顶端，将外层的ScrollView设置为可滑动状态
   const handleSlide = useCallback(() => { 
     setEnableScrollViewScroll(true);    
@@ -171,7 +178,7 @@ const User: React.FC<UserProps> = (props) => {
               <LineItemName displayname={userData?.display_name} emojis={userData?.emojis} fontSize={18} />
               <Text style={styles.acct}><Text>@</Text>{userData?.acct}</Text>
             </View>
-            <HTML source={{ html: userData?.note }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 10 }} />
+            <HTML source={{ html: replaceContentEmoji(userData?.note, userData?.emojis) }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 10 }} />
             <View style={styles.act}>
               <Text style={styles.msg_number}>{stringAddComma(userData?.statuses_count)}<Text style={styles.msg}>&nbsp;嘟文</Text></Text>
               <Text style={[styles.msg_number, { marginLeft: 10 }]}>{stringAddComma(userData?.following_count)}<Text style={styles.msg}>&nbsp;正在关注</Text></Text>

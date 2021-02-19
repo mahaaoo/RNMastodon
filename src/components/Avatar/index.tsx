@@ -32,7 +32,7 @@ const Avatar: React.FC<AvatarProps> = (props) => {
           priority: FastImage.priority.normal,
       }}
       onError={() => {
-        console.log("加载失败");
+        console.log("头像加载失败");
         setIsLoad(false);   
       }}
       resizeMode={FastImage.resizeMode.contain}
