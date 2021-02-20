@@ -7,7 +7,7 @@ import HomeLineItem from "../home/homelineItem";
 import RefreshList, { RefreshState } from "../../components/RefreshList";
 import { useRequest } from "../../utils/hooks";
 
-import { getAccountsById, getStatusesById, getFavourites } from "../../server/account";
+import { getStatusesById } from "../../server/account";
 
 const fetchStatusById = (id: string = "") => {
   const fn = (param: string) => {
@@ -70,7 +70,7 @@ const UserLine: React.FC<UserLineProps> = (props) => {
 
   const handleLoadMore = useCallback(() => {
     setListStatus(status => status = RefreshState.FooterRefreshing);
-    const maxId = dataSource[dataSource.length - 1].id;
+    const maxId = dataSource[dataSource.length - 1]?.id;
     getUserStatus(`?max_id=${maxId}`);
   }, []);
 
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.pageDefaultBackground,
-    height: Screen.height - 154, // 154是怎么的
+    height: Screen.height - 104 - 50, // 上滑逐渐显示的Header的高度+ScrollableTabView高度
     width: Screen.width
   }
 });

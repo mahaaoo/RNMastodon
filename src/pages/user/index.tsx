@@ -79,6 +79,7 @@ const User: React.FC<UserProps> = (props) => {
   // 监听当前滚动位置 
   const handleListener = (e: any) => {
     const offsetY = e.nativeEvent.contentOffset.y;
+    // 下拉刷新
     if (offsetY <= -PULLOFFSETY && !refreshing) {
       setRefreshing(true);
     }
@@ -87,11 +88,6 @@ const User: React.FC<UserProps> = (props) => {
     } 
     return null;
   }
-  // 下拉刷新执行方法
-  // 2021-02-05 废弃：将刷新触发方法，放到useEffect中，监听refreshing状态
-  // const handleRefresh = useCallback(() => {
-  //   console.log("下拉刷新");
-  // }, [])
 
   // 当嵌套在里面内容滑动到顶端，将外层的ScrollView设置为可滑动状态
   const handleSlide = useCallback(() => { 
