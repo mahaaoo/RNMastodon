@@ -34,7 +34,7 @@ const tabConfigs = {
     name: "Setting",
     component: Setting,
     icon: "../images/tab/user.png",
-    options: { tabBarLabel: '个人' },
+    options: { tabBarLabel: '个人', header: () => null },
   },
 };
 

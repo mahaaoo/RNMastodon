@@ -1,25 +1,30 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+import FastImage from "react-native-fast-image";
+
 import { useRequest } from "../../utils/hooks";
 import { getSelfInformation } from "../../server/account";
-
-const fetchSelfInformation = () => {
-  const fn = () => {
-    return getSelfInformation();
-  }
-  return fn;
-}
-
+import Screen from "../../config/screen";
 
 const Setting: React.FC<{}> = () => {
 
-  const {data} = useRequest(fetchSelfInformation());
+  const {data} = useRequest(getSelfInformation);
 
   console.log(data);
   
   return (
     <View style={styles.main}>
-      <Text>设置</Text>
+      <FastImage
+        style={{ width: Screen.width, height: 200 }}
+        source={{
+            uri: data?.header,
+            priority: FastImage.priority.normal,
+        }}
+        resizeMode={FastImage.resizeMode.cover}
+        onError={() => {
+          console.log("图片加载失败");
+        }}
+      />
     </View>
   );
 }

@@ -43,6 +43,10 @@ const PagesRouter: React.FC<{}> = () => {
           }
           if(routeName == "Setting") {
             title = "个人";
+            return {
+              title,
+              header: () => null
+            }
           }
           return {
             title

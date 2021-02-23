@@ -1,5 +1,5 @@
 import request, { MethodType } from "../utils/request";
-import { Timelines } from "../config/interface";
+import { Timelines, Account } from "../config/interface";
 
 export const getAccountsById = (id: string): Promise<any> => {
   const url = '/api/v1/accounts/' + id;
@@ -15,7 +15,7 @@ export const getStatusesById = (id: string, params: string = ''): Promise<Array<
 
 // 获取当前账号的用户信息
 // /api/v1/accounts/verify_credentials
-export const getSelfInformation = (): Promise<any> => {
+export const getSelfInformation = (): Promise<Account> => {
   const url = '/api/v1/accounts/verify_credentials';
 
   return request(url, MethodType.GET);

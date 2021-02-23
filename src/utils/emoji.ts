@@ -1,4 +1,3 @@
-import { exp } from "react-native-reanimated";
 import { Emoji } from "../config/interface";
 
 interface Children {
@@ -323,7 +322,7 @@ export const replaceNameEmoji = (text: string, emojis: Emoji[]): any[] => {
   for (let item of emojis) {
     ACList.push({
       word: `:${item.shortcode}:`,
-      toWord: mark + item.url,
+      toWord: mark + item.static_url,
     })
   }
 
@@ -336,7 +335,7 @@ export const replaceNameEmoji = (text: string, emojis: Emoji[]): any[] => {
   for(let item of result) {
     let isEmoji = false;
     for (let emoji of emojis) {
-      if(emoji.url === item) {
+      if(emoji.static_url == item) {
         isEmoji = true;
       }
     }
