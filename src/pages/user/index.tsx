@@ -158,7 +158,9 @@ const User: React.FC<UserProps> = (props) => {
           <ScrollableTabView 
             style={{ backgroundColor: '#fff' }} 
             renderTabBar={() => <MyTabBar style={{ justifyContent: 'flex-start' }}/>}
-            onChangeTab={(index: any) => { setCurrentTab(index.i)}}
+            onChangeTab={(index: any) => { 
+              setCurrentTab(index.i);
+            }}
             >
             <UseLine 
               tabLabel="嘟文"
