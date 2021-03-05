@@ -7,6 +7,7 @@ import { Timelines } from "../../config/interface";
 
 import { navigate } from "../../utils/rootNavigation";
 import { homeLine } from "../../server/timeline";
+import { verifyToken } from "../../server/app";
 import { useRequest } from "../../utils/hooks";
 
 import RefreshList, { RefreshState } from "../../components/RefreshList";
@@ -21,13 +22,14 @@ const fetchHomeLine = () => {
 }
 
 const Home: React.FC<{}> = () => {
-  const {appStore} = useStores();
+  const {appStore, accountStore} = useStores();
 
-  const [isLogin, setIsLogin] = useState(false);
   const [listData, setListData] = useState<Timelines[]>([]);
   const [status, setStatus] = useState<RefreshState>(RefreshState.Idle);
 
   const { data: homeLineData, run: getHomeLineData } = useRequest(fetchHomeLine(), { manual: true, loading: false });
+  const { data: account, run: fetchVerifyToken } = useRequest(verifyToken, { manual: true, loading: true });
+
 
   const handleRefresh = useCallback(() => {
     setStatus(status => status = RefreshState.HeaderRefreshing);
@@ -42,12 +44,20 @@ const Home: React.FC<{}> = () => {
 
   useEffect(() => {
     if(appStore.hostUrl.length > 0 && appStore.token.length > 0) {
-      setIsLogin(true);
-      getHomeLineData();
+      fetchVerifyToken();
     } else {
       navigate("Guide");
     }
   }, [appStore.hostUrl, appStore.token]);
+
+  useEffect(() => {
+    if(account) {
+      getHomeLineData();
+      accountStore.setCurrentAccount(account);
+    } else {
+      navigate("Guide");
+    }
+  }, [account])
 
   useEffect(() => {
     if(homeLineData) {
@@ -61,14 +71,6 @@ const Home: React.FC<{}> = () => {
     }
   }, [ homeLineData ]);
   
-  if(!isLogin || !homeLineData) {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" />
-      </View>
-    )
-  };
-
   return (
     <View style={styles.main}>
       <RefreshList 

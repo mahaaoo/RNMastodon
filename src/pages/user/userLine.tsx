@@ -7,11 +7,10 @@ import HomeLineItem from "../home/homelineItem";
 import RefreshList, { RefreshState } from "../../components/RefreshList";
 import { useRequest } from "../../utils/hooks";
 
-import { getStatusesById } from "../../server/account";
 
-const fetchStatusById = (id: string = "") => {
+const fetchStatusById = (id: string = "", request: (id: string, param: string) => Promise<Timelines[]>) => {
   const fn = (param: string) => {
-    return getStatusesById(id, param);
+    return request(id, param);
   }
   return fn;
 }
@@ -23,12 +22,13 @@ interface UserLineProps {
   id: string,
   refreshing: boolean,
   onFinish: () => void,
+  request: (id: string, param: string) => Promise<Timelines[]>,
 }
 
 const UserLine: React.FC<UserLineProps> = (props) => {
-  const { scrollEnabled, onTop, id, refreshing, onFinish } = props;
+  const { scrollEnabled, onTop, id, refreshing, onFinish, request} = props;
 
-  const { data: userStatus, run: getUserStatus } = useRequest(fetchStatusById(id), { loading: false, manual: true }); // 获取用户发表过的推文
+  const { data: userStatus, run: getUserStatus } = useRequest(fetchStatusById(id, request), { loading: false, manual: true }); // 获取用户发表过的推文
   const [dataSource, setDataSource] = useState<Timelines[]>([]);
   const [listStatus, setListStatus] = useState<RefreshState>(RefreshState.Idle); // 内嵌的FlatList的当前状态
   const table: any = useRef(null);
@@ -50,7 +50,11 @@ const UserLine: React.FC<UserLineProps> = (props) => {
         setDataSource(userStatus);
       }
       if(listStatus === RefreshState.FooterRefreshing) {
-        setDataSource(listData => listData.concat(userStatus));
+        const maxId = dataSource[0]?.id;
+        if(userStatus[0].id < maxId) {
+          setDataSource(listData => listData.concat(userStatus));
+        }
+
         setListStatus(RefreshState.Idle);
       }
       // 请求结束，通知父组件完成本次刷新

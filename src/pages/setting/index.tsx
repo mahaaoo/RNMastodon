@@ -24,7 +24,7 @@ import SlideHeader from "../../components/SlideHeader";
 import { getAccountsById, getStatusesById } from "../../server/account";
 
 import LineItemName from "../home/LineItemName";
-import UseLine from "../user/useLine";
+import UseLine from "../user/userLine";
 import Favourites from "../user/favourites";
 import { replaceContentEmoji } from "../../utils/emoji";
 

@@ -1,6 +1,6 @@
 import request, { MethodType } from "../utils/request";
 import { ClientName, Scopes, RedirectUris } from "../config/oauth"
-import { AppInterface, AppToken } from "../config/interface";
+import { AppInterface, AppToken, Account } from "../config/interface";
 
 // 获取app注册在即将登录的站点内信息
 export const getAppConfig = (host: string): Promise<AppInterface> => {
@@ -25,4 +25,11 @@ export const getToken = (host: string, param: Object): Promise<AppToken> => {
   };
 
   return request(url, MethodType.POST, params);
+}
+
+// 校验token是否有效
+export const verifyToken = (): Promise<Account> => {
+  const url = '/api/v1/accounts/verify_credentials';
+
+  return request(url, MethodType.GET);
 }

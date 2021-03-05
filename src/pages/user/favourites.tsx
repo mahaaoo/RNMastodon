@@ -50,7 +50,11 @@ const Favourities: React.FC<FavouritiesProps> = (props) => {
         setDataSource(favourities);
       }
       if(listStatus === RefreshState.FooterRefreshing) {
-        setDataSource(listData => listData.concat(favourities));
+        const maxId = dataSource[0]?.id;
+        if(dataSource[0].id < maxId) {
+          setDataSource(listData => listData.concat(favourities));
+        }
+
         setListStatus(RefreshState.Idle);
       }
       // 请求结束，通知父组件完成本次刷新
@@ -70,7 +74,7 @@ const Favourities: React.FC<FavouritiesProps> = (props) => {
 
   const handleLoadMore = useCallback(() => {
     setListStatus(status => status = RefreshState.FooterRefreshing);
-    const maxId = dataSource[dataSource.length - 1].id;
+    const maxId = dataSource[dataSource.length - 1]?.id;
     getFavourities(`?max_id=${maxId}`);
   }, []);
 
