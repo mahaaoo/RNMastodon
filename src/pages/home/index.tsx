@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { observer } from "mobx-react";
 import { useStores } from "../../store";
 
@@ -13,6 +13,7 @@ import { useRequest } from "../../utils/hooks";
 import RefreshList, { RefreshState } from "../../components/RefreshList";
 import HomeLineItem from "./homelineItem";
 import Colors from "../../config/colors";
+import DefaultLineItem from "./defaultLineItem";
 
 const fetchHomeLine = () => {
   const fn = (params: string) => {
@@ -24,7 +25,7 @@ const fetchHomeLine = () => {
 const Home: React.FC<{}> = () => {
   const {appStore, accountStore} = useStores();
 
-  const [listData, setListData] = useState<Timelines[]>([]);
+  const [listData, setListData] = useState<Timelines[]>(new Array(6));
   const [status, setStatus] = useState<RefreshState>(RefreshState.Idle);
 
   const { data: homeLineData, run: getHomeLineData } = useRequest(fetchHomeLine(), { manual: true, loading: false });
@@ -73,9 +74,15 @@ const Home: React.FC<{}> = () => {
   
   return (
     <View style={styles.main}>
-      <RefreshList 
+      <RefreshList
         data={listData}
-        renderItem={({ item }) => <HomeLineItem item={item} />}
+        renderItem={({ item }) => {
+          // 默认为RefreshList添加6个骨架屏
+          if(listData.length === 6) {
+            return <DefaultLineItem />
+          } 
+          return <HomeLineItem item={item} />
+        }}
         onHeaderRefresh={handleRefresh}
         onFooterRefresh={handleLoadMore}
         refreshState={status}

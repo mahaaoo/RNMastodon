@@ -8,6 +8,7 @@ import { useRequest } from "../../utils/hooks";
 
 import RefreshList, { RefreshState } from "../../components/RefreshList";
 import HomeLineItem from "../home/homelineItem";
+import DefaultLineItem from "../home/defaultLineItem";
 import Colors from "../../config/colors";
 
 const fetchLocalLine = () => {
@@ -22,7 +23,7 @@ interface LocalProps {
 }
 
 const Local: React.FC<LocalProps> = (props) => {
-  const [listData, setListData] = useState<Timelines[]>([]);
+  const [listData, setListData] = useState<Timelines[]>(new Array(6));
   const [status, setStatus] = useState<RefreshState>(RefreshState.Idle);
 
   const { data: localLineData, run: getLocalLineData } = useRequest(fetchLocalLine(), { manual: true, loading: false });
@@ -59,7 +60,13 @@ const Local: React.FC<LocalProps> = (props) => {
     <View style={styles.main}>
       <RefreshList 
         data={listData}
-        renderItem={({ item }) => <HomeLineItem item={item} />}
+        renderItem={({ item }) => {
+          // 默认为RefreshList添加6个骨架屏
+          if(listData.length === 6) {
+            return <DefaultLineItem />
+          } 
+          return <HomeLineItem item={item} />
+        }}
         onHeaderRefresh={handleRefresh}
         onFooterRefresh={handleLoadMore}
         refreshState={status}

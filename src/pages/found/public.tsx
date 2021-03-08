@@ -9,6 +9,7 @@ import { useRequest } from "../../utils/hooks";
 import RefreshList, { RefreshState } from "../../components/RefreshList";
 import HomeLineItem from "../home/homelineItem";
 import Colors from "../../config/colors";
+import DefaultLineItem from "../home/defaultLineItem";
 
 const fetchPublicLine = () => {
   const fn = (params: string) => {
@@ -23,7 +24,7 @@ interface PublicProps {
 }
 
 const Public: React.FC<PublicProps> = () => {
-  const [listData, setListData] = useState<Timelines[]>([]);
+  const [listData, setListData] = useState<Timelines[]>(new Array(6));
   const [status, setStatus] = useState<RefreshState>(RefreshState.Idle);
 
   const { data: publicLineData, run: getPublicLineData } = useRequest(fetchPublicLine(), { manual: true, loading: false });
@@ -60,7 +61,13 @@ const Public: React.FC<PublicProps> = () => {
     <View style={styles.main}>
       <RefreshList 
         data={listData}
-        renderItem={({ item }) => <HomeLineItem item={item} />}
+        renderItem={({ item }) => {
+          // 默认为RefreshList添加6个骨架屏
+          if(listData.length === 6) {
+            return <DefaultLineItem />
+          } 
+          return <HomeLineItem item={item} />
+        }}
         onHeaderRefresh={handleRefresh}
         onFooterRefresh={handleLoadMore}
         refreshState={status}

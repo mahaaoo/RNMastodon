@@ -28,7 +28,7 @@ interface RefreshListProps extends FlatListProps<any> {
 const RefreshList: React.FC<RefreshListProps> = (props) => {
   const {
     refreshState,
-    data,
+    data = [0,0,0,0,0,0],
     onFooterRefresh,
     onHeaderRefresh,
     footerContainerStyle,

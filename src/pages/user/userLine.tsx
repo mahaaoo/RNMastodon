@@ -4,6 +4,8 @@ import Colors from "../../config/colors";
 import Screen from "../../config/screen";
 import { Timelines } from "../../config/interface";
 import HomeLineItem from "../home/homelineItem";
+import DefaultLineItem from "../home/defaultLineItem";
+
 import RefreshList, { RefreshState } from "../../components/RefreshList";
 import { useRequest } from "../../utils/hooks";
 
@@ -29,7 +31,7 @@ const UserLine: React.FC<UserLineProps> = (props) => {
   const { scrollEnabled, onTop, id, refreshing, onFinish, request} = props;
 
   const { data: userStatus, run: getUserStatus } = useRequest(fetchStatusById(id, request), { loading: false, manual: true }); // 获取用户发表过的推文
-  const [dataSource, setDataSource] = useState<Timelines[]>([]);
+  const [dataSource, setDataSource] = useState<Timelines[]>(new Array(6));
   const [listStatus, setListStatus] = useState<RefreshState>(RefreshState.Idle); // 内嵌的FlatList的当前状态
   const table: any = useRef(null);
   
@@ -88,7 +90,12 @@ const UserLine: React.FC<UserLineProps> = (props) => {
         showsVerticalScrollIndicator={false}
         style={{ flex:1, width: Screen.width }}
         data={dataSource}
-        renderItem={({ item }) => <HomeLineItem item={item} />}
+        renderItem={({ item }) => {
+          if(dataSource.length === 6) {
+            return <DefaultLineItem />
+          } 
+          return <HomeLineItem item={item} />
+        }}
         scrollEnabled = {scrollEnabled}
         onScroll={handleListener}
         scrollEventThrottle={1}

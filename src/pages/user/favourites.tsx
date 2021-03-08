@@ -6,6 +6,7 @@ import { Timelines } from "../../config/interface";
 import HomeLineItem from "../home/homelineItem";
 import RefreshList, { RefreshState } from "../../components/RefreshList";
 import { useRequest } from "../../utils/hooks";
+import DefaultLineItem from "../home/defaultLineItem";
 
 import { getFavouritesById } from "../../server/account";
 
@@ -29,7 +30,7 @@ const Favourities: React.FC<FavouritiesProps> = (props) => {
   const { scrollEnabled, onTop, refreshing, onFinish, id } = props;
 
   const { data: favourities, run: getFavourities } = useRequest(fetchStatusById(), { loading: false, manual: true }); // 获取用户发表过的推文
-  const [dataSource, setDataSource] = useState<Timelines[]>([]);
+  const [dataSource, setDataSource] = useState<Timelines[]>(new Array(6));
   const [listStatus, setListStatus] = useState<RefreshState>(RefreshState.Idle); // 内嵌的FlatList的当前状态
   const table: any = useRef(null);
   
@@ -88,7 +89,12 @@ const Favourities: React.FC<FavouritiesProps> = (props) => {
         showsVerticalScrollIndicator={false}
         style={{ flex:1, width: Screen.width }}
         data={dataSource}
-        renderItem={({ item }) => <HomeLineItem item={item} />}
+        renderItem={({ item }) => {
+          if(dataSource.length === 6) {
+            return <DefaultLineItem />
+          } 
+          return <HomeLineItem item={item} />
+        }}
         scrollEnabled = {scrollEnabled}
         onScroll={handleListener}
         scrollEventThrottle={1}
