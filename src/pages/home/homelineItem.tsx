@@ -2,6 +2,8 @@ import React, { useCallback } from "react";
 import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import HTML from "react-native-render-html";
 
+import { Skeleton, SkeletonLine, SkeletonAvatar, Fade, Loading, Shine, ShineOver } from "../../components/Skeleton";
+
 import Avatar from "../../components/Avatar";
 import { Timelines } from "../../config/interface";
 import { dateToFromNow } from "../../utils/date";
@@ -52,6 +54,29 @@ interface HomeLineItemProps {
 const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
   const { item } = props;
   const showItem = item.reblog || item ;
+
+  if(!showItem) {
+    return (
+      <View style={[styles.main]}>
+        <View style={{ marginHorizontal: 15 }}>
+          <Skeleton animte={Fade}>
+            <View style={{ flexDirection: 'row'}}>
+              <View style={{ marginTop: 7 }}>
+                <SkeletonAvatar height={45} width={45} />
+              </View>
+              <View style={{ marginLeft: 5}}>
+                <SkeletonLine width={120} />
+                <SkeletonLine width={75} />
+              </View>
+            </View>
+            <SkeletonLine width={Screen.width - 30} />
+            <SkeletonLine width={Screen.width * 0.5} />
+            <SkeletonLine width={Screen.width * 0.8} />
+          </Skeleton>
+        </View>
+      </View>
+    )
+  }
 
   const handleAvatar = useCallback(() => {
     navigate('User', { id: item.account.id })

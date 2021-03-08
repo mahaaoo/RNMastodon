@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, FlatList, FlatListProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 export enum RefreshState {
