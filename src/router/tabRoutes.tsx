@@ -5,9 +5,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from "../pages/home";
 import Found from "../pages/found";
-import Notify from "../pages/notify";
+// import Notify from "../pages/notify";
 import Setting from "../pages/setting";
-// import TopRoutes from "./topRoutes";
+import TopRoutes from "./topRoutes";
 
 const TabStack = createBottomTabNavigator();
 
@@ -26,7 +26,7 @@ const tabConfigs = {
   },
   notify: {
     name: "Notify",
-    component: Notify,
+    component: TopRoutes,
     icon: "../images/tab/bell.png",
     options: { tabBarLabel: '通知', tabBarBadge: 3 },
   },

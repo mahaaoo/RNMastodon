@@ -13,6 +13,7 @@
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/bottom-tabs": "^5.11.2",
+    "@react-navigation/material-top-tabs": "^5.3.14",
     "@react-navigation/native": "^5.8.10",
     "@react-navigation/stack": "^5.12.8",
     "axios": "^0.21.1",
@@ -28,6 +29,7 @@
     "react-native-screens": "^2.16.1",
     "react-native-scrollable-tab-view": "^1.0.0",
     "react-native-svg": "^12.1.0",
+    "react-native-tab-view": "^2.16.0",
     "react-native-webview": "^11.0.2",
     "teaset": "^0.7.5"
   },

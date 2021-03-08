@@ -39,7 +39,11 @@ const PagesRouter: React.FC<{}> = () => {
             }
           }
           if(routeName == "Notify") {
-            title = "通知";
+            title = "";
+            return {
+              title,
+              header: () => <View style={{ height: Screen.top, backgroundColor: '#fff' }} />
+            }
           }
           if(routeName == "Setting") {
             title = "个人";

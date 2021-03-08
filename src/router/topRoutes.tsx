@@ -1,7 +1,7 @@
 import React from "react";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import Local from "../pages/found/local";
-import Public from "../pages/found/public";
+import AllNotify from "../pages/notify/allNotify";
+import Message from "../pages/notify/message";
 
 import Colors from "../config/colors";
 
@@ -14,28 +14,24 @@ const TopRouter: React.FC<{}> = () => {
       gestureHandlerProps={{
         maxPointers: 1,
       }}
-      style={{
-      }}
       tabBarOptions={{
         activeTintColor: Colors.theme,
         inactiveTintColor: Colors.grayTextColor,
         style: {
           justifyContent: "center",
         },  
-        tabStyle: { width: 'auto'},
         labelStyle: { fontWeight: 'bold' ,fontSize: 18, textAlign: "center", justifyContent: "center" },
-        scrollEnabled: true
       }}
     >
       <Top.Screen 
-        name="LocalTimeLine" 
-        component={Local}
-        options={{ tabBarLabel: '本站' }}
+        name="AllNotify" 
+        component={AllNotify}
+        options={{ tabBarLabel: '全部' }}
       />
       <Top.Screen 
-        name="PublicTimeLine" 
-        component={Public}
-        options={{ tabBarLabel: '跨站' }}
+        name="Message" 
+        component={Message}
+        options={{ tabBarLabel: '消息' }}
       />
     </Top.Navigator>
   );
