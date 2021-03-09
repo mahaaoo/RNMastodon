@@ -20,6 +20,7 @@ import StickyHeader from "../../components/StickyHeader";
 import StretchableImage from "../../components/StretchableImage";
 import PullLoading from "../../components/PullLoading";
 import SlideHeader from "../../components/SlideHeader";
+import FollowButton from "../../components/FollowButton";
 
 import { getAccountsById, getStatusesById, getStatusesReplyById, getStatusesMediaById, getStatusesPinById } from "../../server/account";
 
@@ -126,21 +127,7 @@ const User: React.FC<UserProps> = (props) => {
               <View style={styles.avatar}>
                 <Avatar url={userData?.avatar} size={65} borderColor={"#fff"} borderWidth={4} />
               </View>
-              <Button 
-                text={"关注"} 
-                onPress={() => {}} 
-                style={{ 
-                  height: 40, 
-                  paddingVertical: 8, 
-                  borderRadius: 20, 
-                  backgroundColor: '#fff',
-                  borderWidth: 1,
-                  borderColor: Colors.theme
-                }}
-                textStyle={{
-                  color: Colors.theme
-                }}
-              />
+              <FollowButton />
             </View>
             <View>
               <LineItemName displayname={userData?.display_name} emojis={userData?.emojis} fontSize={18} />
@@ -149,8 +136,8 @@ const User: React.FC<UserProps> = (props) => {
             <HTML source={{ html: replaceContentEmoji(userData?.note, userData?.emojis) }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 10 }} />
             <View style={styles.act}>
               <Text style={styles.msg_number}>{stringAddComma(userData?.statuses_count)}<Text style={styles.msg}>&nbsp;嘟文</Text></Text>
-              <Text style={[styles.msg_number, { marginLeft: 10 }]}>{stringAddComma(userData?.following_count)}<Text style={styles.msg}>&nbsp;正在关注</Text></Text>
-              <Text style={[styles.msg_number, { marginLeft: 10 }]}>{stringAddComma(userData?.followers_count)}<Text style={styles.msg}>&nbsp;关注者</Text></Text>
+              <Text style={[styles.msg_number, { marginLeft: 10 }]}>{stringAddComma(userData?.following_count)}<Text style={styles.msg}>&nbsp;关注</Text></Text>
+              <Text style={[styles.msg_number, { marginLeft: 10 }]}>{stringAddComma(userData?.followers_count)}<Text style={styles.msg}>&nbsp;粉丝</Text></Text>
             </View>
           </View>
         </View>

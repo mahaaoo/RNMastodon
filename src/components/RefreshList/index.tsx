@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, FlatList, FlatListProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 export enum RefreshState {
@@ -120,6 +120,11 @@ const RefreshList: React.FC<RefreshListProps> = (props) => {
 
     return footer;
   };
+
+  if(!data || data.length === 0) {
+    return <Text>暂无数据</Text>
+  }
+
 
   return (
     <FlatList
