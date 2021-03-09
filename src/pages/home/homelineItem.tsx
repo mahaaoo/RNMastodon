@@ -63,7 +63,7 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
         item.reblog ?
         <View style={styles.status}>
           <Image source={require("../../images/turn_white.png")} style={{ width: 24, height: 22 }} />
-          <Text style={{ color: Colors.defaultWhite, marginLeft: 2 }}>{item.account.display_name}  转发了</Text>
+          <Text style={{ color: Colors.defaultWhite, marginLeft: 2 }}>{item.account?.display_name || item.account?.username}  转发了</Text>
         </View>
         : null
       }
@@ -71,7 +71,7 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
         item.in_reply_to_id ?
         <View style={styles.status}>
           <Image source={require("../../images/comment_white.png")} style={{ width: 20, height: 18 }} />
-          <Text style={{ color: Colors.defaultWhite, marginLeft: 2 }}>{item.account.display_name}  转评了</Text>
+          <Text style={{ color: Colors.defaultWhite, marginLeft: 2 }}>{item.account?.display_name || item.account?.username}  转评了</Text>
         </View>
         : null
       }
@@ -84,7 +84,7 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View style={{ flex: 1 }}>
                 <Text numberOfLines={1} ellipsizeMode="tail">
-                  <LineItemName displayname={showItem?.account?.display_name} emojis={showItem?.account?.emojis} />
+                  <LineItemName displayname={showItem?.account?.display_name || showItem?.account?.username} emojis={showItem?.account?.emojis} />
                   <Text style={{ color: Colors.commonToolBarText, fontSize: 14 }} >
                     {`@${showItem?.account?.acct}`}
                   </Text>
@@ -127,7 +127,7 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
             <Text style={styles.tool_title}>转评</Text>
           </View>
           <View style={styles.tool_item}>
-            <Image source={require("../../images/like.png")} style={{ width: 22, height: 22 }} />
+            <Image source={require("../../images/like.png")} style={{ width: 20, height: 20 }} />
             <Text style={styles.tool_title}>赞</Text>
           </View>
         </View>

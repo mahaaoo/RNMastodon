@@ -7,7 +7,7 @@ export default {
 
   commonToolBarText: '#9f9f9f',
   buttonDefaultBackground: '#2593FC',
-  defaultLineGreyColor: '#eee',
+  defaultLineGreyColor: '#e5e5e5',
   linkTagColor: '#527EAD',
 
   timelineStatusTag: '#87CEFA',

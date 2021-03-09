@@ -333,15 +333,9 @@ export const replaceNameEmoji = (text: string, emojis: Emoji[]): any[] => {
   const re = [];
 
   for(let item of result) {
-    let isEmoji = false;
-    for (let emoji of emojis) {
-      if(emoji.static_url == item) {
-        isEmoji = true;
-      }
-    }
     re.push({
       text: item,
-      image: isEmoji,
+      image: item.indexOf('http') > -1,
     });
   }
   return re;

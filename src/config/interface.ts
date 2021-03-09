@@ -97,3 +97,11 @@ export interface Application {
   name: string,
   website: string,
 }
+
+export interface Notification {
+  account: Account,
+  created_at: string,
+  id: string,
+  type: string,
+  status: Timelines,
+}

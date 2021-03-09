@@ -20,7 +20,7 @@ const TopRouter: React.FC<{}> = () => {
         style: {
           justifyContent: "center",
         },  
-        labelStyle: { fontWeight: 'bold' ,fontSize: 18, textAlign: "center", justifyContent: "center" },
+        labelStyle: { fontWeight: 'bold' ,fontSize: 16, textAlign: "center", justifyContent: "center" },
       }}
     >
       <Top.Screen 
