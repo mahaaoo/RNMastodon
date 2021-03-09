@@ -8,6 +8,7 @@ import { useRequest } from "../../utils/hooks";
 
 import FollowItem from "./followItem";
 import FavouriteItem from "./favouriteItem";
+import MetionItem from "./metionItem";
 import { getNotifications } from "../../server/notifications";
 
 const fetchNotifications = () => {
@@ -26,8 +27,6 @@ const AllNotify: React.FC<AllNotifyProps> = (props) => {
   const [dataSource, setDataSource] = useState<Notification[]>([]);
   const [listStatus, setListStatus] = useState<RefreshState>(RefreshState.Idle);
 
-
-
   useEffect(() => {
     getNotifications();
   }, []);
@@ -35,7 +34,7 @@ const AllNotify: React.FC<AllNotifyProps> = (props) => {
   useEffect(() => {
     // 每当请求了新数据，都将下拉刷新状态设置为false
     if(notifications) {
-      if (listStatus === RefreshState.HeaderRefreshing) {
+      if (listStatus === RefreshState.HeaderRefreshing || listStatus === RefreshState.Idle) {
         setDataSource(notifications);
       }
       if(listStatus === RefreshState.FooterRefreshing) {
@@ -73,6 +72,9 @@ const AllNotify: React.FC<AllNotifyProps> = (props) => {
           }
           if (item?.type === "favourite") {
             return <FavouriteItem item={item} />
+          }
+          if (item?.type === "mention") {
+            return <MetionItem item={item} />
           }
           return <View />
         }}
