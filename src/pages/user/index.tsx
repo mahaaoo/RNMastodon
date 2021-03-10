@@ -74,30 +74,11 @@ const User: React.FC<UserProps> = (props) => {
   const [refreshing, setRefreshing] = useState(false); // 是否处于下拉加载的状态
   const [enableScrollViewScroll, setEnableScrollViewScroll] = useState(true); // 最外层ScrollView是否可以滚动
   
-  const [buttonStatus, setButtonStatus] = useState(FollowButtonStatus.UnFollow);
 
   useEffect(() => {
     getUserData();
     getRelationship();
   }, []);
-
-  useEffect(() => {
-    if(relationship && relationship.length > 0) {
-      const followed = relationship[0].followed_by;
-      const following = relationship[0].following;
-
-      if(!followed && !following) {
-        setButtonStatus(FollowButtonStatus.UnFollow);
-      }
-      if(!followed && following) {
-        setButtonStatus(FollowButtonStatus.Following);
-      }
-      if(followed && following) {
-        setButtonStatus(FollowButtonStatus.BothFollow);
-      }
-    }
-  }, [relationship]);
-
 
   // 返回上一页
   const handleBack = useCallback(goBack, []);
@@ -153,7 +134,10 @@ const User: React.FC<UserProps> = (props) => {
               <View style={styles.avatar}>
                 <Avatar url={userData?.avatar} size={65} borderColor={"#fff"} borderWidth={4} />
               </View>
-              <FollowButton status={buttonStatus} />
+              <FollowButton
+                relationships={relationship}
+                id={props?.route?.params?.id}
+              />
             </View>
             <View>
               <LineItemName displayname={userData?.display_name} emojis={userData?.emojis} fontSize={18} />

@@ -60,3 +60,17 @@ export const getRelationships = (id: string[] | string): Promise<Array<Relations
 
   return request(url, MethodType.GET);
 }
+
+// 关注一个用户
+export const followById = (id: string = ''): Promise<Relationship> => {
+  const url = '/api/v1/accounts/' + id + '/follow';
+
+  return request(url, MethodType.POST);
+}
+
+// 取关一个用户
+export const unfollowById = (id: string = ''): Promise<Relationship> => {
+  const url = '/api/v1/accounts/' + id + '/unfollow';
+
+  return request(url, MethodType.POST);
+}
