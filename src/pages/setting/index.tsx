@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useCallback, useState, useMemo } from "react";
-import { View, Text, StyleSheet, Animated, ScrollView } from "react-native";
+import React, { useRef, useEffect, useState } from "react";
+import { View, Text, StyleSheet, Animated } from "react-native";
 import HTML from "react-native-render-html";
 
 import Screen from "../../config/screen";
@@ -7,6 +7,7 @@ import Colors from "../../config/colors";
 
 import { stringAddComma } from "../../utils/string";
 import { useRequest } from "../../utils/hooks";
+import { useStores } from "../../store";
 
 import Avatar from "../../components/Avatar";
 import StretchableImage from "../../components/StretchableImage";
@@ -41,9 +42,10 @@ const PULLOFFSETY = 100; // 下拉刷新的触发距离
 
 const Setting: React.FC<{}> = () => {
   const scrollY: any = useRef(new Animated.Value(0)).current; //最外层ScrollView的滑动距离
+  const {accountStore} = useStores();
 
   const [refreshing, setRefreshing] = useState(false); // 是否处于下拉加载的状态
-  const { data: userData, run: getUserData } = useRequest(fetchUserById('54180'), { manual: true, loading: true }); // 获取用户的个人信息
+  const { data: userData, run: getUserData } = useRequest(fetchUserById(accountStore.currentAccount?.id), { manual: true, loading: false }); // 获取用户的个人信息
 
   useEffect(() => {
     getUserData();

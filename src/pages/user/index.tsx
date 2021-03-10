@@ -15,14 +15,13 @@ import { useRequest } from "../../utils/hooks";
 import { goBack } from "../../utils/rootNavigation";
 
 import Avatar from "../../components/Avatar";
-import Button from "../../components/Button";
 import StickyHeader from "../../components/StickyHeader";
 import StretchableImage from "../../components/StretchableImage";
 import PullLoading from "../../components/PullLoading";
 import SlideHeader from "../../components/SlideHeader";
-import FollowButton from "../../components/FollowButton";
+import FollowButton, { FollowButtonStatus } from "../../components/FollowButton";
 
-import { getAccountsById, getStatusesById, getStatusesReplyById, getStatusesMediaById, getStatusesPinById } from "../../server/account";
+import { getAccountsById, getStatusesById, getStatusesReplyById, getStatusesMediaById, getStatusesPinById, getRelationships } from "../../server/account";
 
 import LineItemName from "../home/LineItemName";
 import UseLine from "./userLine";
@@ -32,6 +31,13 @@ import { replaceContentEmoji } from "../../utils/emoji";
 const fetchUserById = (id: string = '') => {
   const fn = () => {
     return getAccountsById(id);
+  }
+  return fn;
+}
+
+const fetchRelationships = (id: string) => {
+  const fn = () => {
+    return getRelationships(id);
   }
   return fn;
 }
@@ -62,16 +68,36 @@ const User: React.FC<UserProps> = (props) => {
   const scrollY: any = useRef(new Animated.Value(0)).current; //最外层ScrollView的滑动距离
 
   const { data: userData, run: getUserData } = useRequest(fetchUserById(props?.route?.params?.id), { manual: true, loading: true }); // 获取用户的个人信息
-  
+  const { data: relationship, run: getRelationship } = useRequest(fetchRelationships(props?.route?.params?.id), { manual: true, loading: false }); // 获取用户的个人信息
+
   const [headHeight, setHeadHeight] = useState(0); // 为StickyHead计算顶吸到顶端的距离
   const [refreshing, setRefreshing] = useState(false); // 是否处于下拉加载的状态
   const [enableScrollViewScroll, setEnableScrollViewScroll] = useState(true); // 最外层ScrollView是否可以滚动
   
-  const [currentTab, setCurrentTab] = useState(0);
+  const [buttonStatus, setButtonStatus] = useState(FollowButtonStatus.UnFollow);
 
   useEffect(() => {
     getUserData();
+    getRelationship();
   }, []);
+
+  useEffect(() => {
+    if(relationship && relationship.length > 0) {
+      const followed = relationship[0].followed_by;
+      const following = relationship[0].following;
+
+      if(!followed && !following) {
+        setButtonStatus(FollowButtonStatus.UnFollow);
+      }
+      if(!followed && following) {
+        setButtonStatus(FollowButtonStatus.Following);
+      }
+      if(followed && following) {
+        setButtonStatus(FollowButtonStatus.BothFollow);
+      }
+    }
+  }, [relationship]);
+
 
   // 返回上一页
   const handleBack = useCallback(goBack, []);
@@ -127,7 +153,7 @@ const User: React.FC<UserProps> = (props) => {
               <View style={styles.avatar}>
                 <Avatar url={userData?.avatar} size={65} borderColor={"#fff"} borderWidth={4} />
               </View>
-              <FollowButton />
+              <FollowButton status={buttonStatus} />
             </View>
             <View>
               <LineItemName displayname={userData?.display_name} emojis={userData?.emojis} fontSize={18} />
@@ -148,10 +174,7 @@ const User: React.FC<UserProps> = (props) => {
           <ScrollableTabView 
             style={{ backgroundColor: '#fff' }} 
             renderTabBar={() => <MyTabBar style={{ justifyContent: 'flex-start' }}/>}
-            onChangeTab={(index: any) => { 
-              setCurrentTab(index.i);
-            }}
-            >
+          >
             <UseLine 
               tabLabel="嘟文"
               scrollEnabled={!enableScrollViewScroll}  

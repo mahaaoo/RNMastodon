@@ -97,9 +97,11 @@ const NinePicture: React.FC<NinePictureProps> = (props) => {
     return (
       <>
         <View style={{ height: height, flexDirection: 'row', borderRadius: 8, overflow: 'hidden', borderWidth: 1, borderColor: '#eee' }}> 
-          <MediaImage item={imageList[0]} index={0} handleClick={handleClick}/>
+          <View style={{ flex: 1 }}>
+            <MediaImage item={imageList[0]} index={0} handleClick={handleClick}/>
+          </View>
           <SpacingBox width={5} /> 
-          <View>
+          <View style={{ flex: 1 }}>
             <MediaImage item={imageList[1]} index={1} handleClick={handleClick}/>
             <SpacingBox height={5} /> 
             <MediaImage item={imageList[2]} index={2} handleClick={handleClick}/>

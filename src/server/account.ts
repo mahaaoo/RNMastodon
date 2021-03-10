@@ -1,5 +1,5 @@
 import request, { MethodType } from "../utils/request";
-import { Timelines, Account } from "../config/interface";
+import { Timelines, Account, Relationship } from "../config/interface";
 
 export const getAccountsById = (id: string): Promise<any> => {
   const url = '/api/v1/accounts/' + id;
@@ -42,9 +42,21 @@ export const getStatusesPinById = (id: string, params: string = ''): Promise<Arr
   return request(url, MethodType.GET);
 }
 
-// /api/v1/favourites
+// 获取点赞的内容
 export const getFavouritesById = (params: string = ''): Promise<Array<Timelines>> => {
   const url = '/api/v1/favourites' + params;
+
+  return request(url, MethodType.GET);
+}
+
+// 获取当前登录用户与所传递用户的关系
+export const getRelationships = (id: string[] | string): Promise<Array<Relationship>> => {
+  let url = '/api/v1/accounts/relationships?';
+  if(Array.isArray(id)) {
+    url += id.map(item => `id=${item}`).join('&');
+  } else {
+    url = url + 'id=' + id;
+  }
 
   return request(url, MethodType.GET);
 }
