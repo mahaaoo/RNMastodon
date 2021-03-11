@@ -19,14 +19,14 @@ import StickyHeader from "../../components/StickyHeader";
 import StretchableImage from "../../components/StretchableImage";
 import PullLoading from "../../components/PullLoading";
 import SlideHeader from "../../components/SlideHeader";
-import FollowButton, { FollowButtonStatus } from "../../components/FollowButton";
+import FollowButton from "../../components/FollowButton";
 
 import { getAccountsById, getStatusesById, getStatusesReplyById, getStatusesMediaById, getStatusesPinById, getRelationships } from "../../server/account";
-
 import LineItemName from "../home/LineItemName";
 import UseLine from "./userLine";
 import Favourites from "./favourites";
 import { replaceContentEmoji } from "../../utils/emoji";
+import { navigate } from "../../utils/rootNavigation";
 
 const fetchUserById = (id: string = '') => {
   const fn = () => {
@@ -109,6 +109,14 @@ const User: React.FC<UserProps> = (props) => {
     setRefreshing(false);
   }, []);
 
+  const handleNavigateToFans = useCallback(() => {
+    navigate('UserFans', { id: props?.route?.params?.id });
+  }, []);
+
+  const handleNavigateToFollowing = useCallback(() => {
+    navigate('UserFollow', { id: props?.route?.params?.id });
+  }, []);
+
   return (
     <>
       <Animated.ScrollView 
@@ -146,8 +154,8 @@ const User: React.FC<UserProps> = (props) => {
             <HTML source={{ html: replaceContentEmoji(userData?.note, userData?.emojis) }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 10 }} />
             <View style={styles.act}>
               <Text style={styles.msg_number}>{stringAddComma(userData?.statuses_count)}<Text style={styles.msg}>&nbsp;嘟文</Text></Text>
-              <Text style={[styles.msg_number, { marginLeft: 10 }]}>{stringAddComma(userData?.following_count)}<Text style={styles.msg}>&nbsp;关注</Text></Text>
-              <Text style={[styles.msg_number, { marginLeft: 10 }]}>{stringAddComma(userData?.followers_count)}<Text style={styles.msg}>&nbsp;粉丝</Text></Text>
+              <Text onPress={handleNavigateToFollowing} style={[styles.msg_number, { marginLeft: 10 }]}>{stringAddComma(userData?.following_count)}<Text style={styles.msg}>&nbsp;关注</Text></Text>
+              <Text onPress={handleNavigateToFans} style={[styles.msg_number, { marginLeft: 10 }]}>{stringAddComma(userData?.followers_count)}<Text style={styles.msg}>&nbsp;粉丝</Text></Text>
             </View>
           </View>
         </View>

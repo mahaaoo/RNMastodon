@@ -74,3 +74,19 @@ export const unfollowById = (id: string = ''): Promise<Relationship> => {
 
   return request(url, MethodType.POST);
 }
+
+// https://mastodon.example/api/v1/accounts/:id/followers
+// 获取用户所有的粉丝
+export const getFollowersById = (id: string = '', params: string = ''): Promise<Account[]> => {
+  const url = '/api/v1/accounts/' + id + '/followers' + params;
+
+  return request(url, MethodType.GET);
+}
+
+// https://mastodon.example/api/v1/accounts/:id/following
+// 获取用户的所有关注人
+export const getFollowingById = (id: string = '', params: string = ''): Promise<Account[]> => {
+  const url = '/api/v1/accounts/' + id + '/following' + params;
+
+  return request(url, MethodType.GET);
+}

@@ -4,6 +4,9 @@ import Guide from "./guide";
 import Login from "./login";
 import WebView from "./webView";
 import User from "./user";
+import UserFans from "./fans/userFans";
+import UserFollow from "./fans/userFollow";
+
 
 export interface RouteParams {
   name: string;
@@ -38,6 +41,20 @@ const routes: Array<RouteParams> = [
     component: User,
     options: {
       header: () => null,
+    }
+  },
+  {
+    name: 'UserFans',
+    component: UserFans,
+    options: {
+      title: '粉丝',
+    }
+  },
+  {
+    name: 'UserFollow',
+    component: UserFollow,
+    options: {
+      title: '正在关注',
     }
   }
 ]

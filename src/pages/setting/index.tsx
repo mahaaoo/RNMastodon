@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
-import { View, Text, StyleSheet, Animated } from "react-native";
+import React, { useRef, useEffect, useState, useCallback } from "react";
+import { View, Text, StyleSheet, Animated, TouchableOpacity } from "react-native";
 import HTML from "react-native-render-html";
 
 import Screen from "../../config/screen";
@@ -16,6 +16,7 @@ import PullLoading from "../../components/PullLoading";
 import { getAccountsById } from "../../server/account";
 import LineItemName from "../home/LineItemName";
 import { replaceContentEmoji } from "../../utils/emoji";
+import { navigate } from "../../utils/rootNavigation";
 
 const fetchUserById = (id: string = '') => {
   const fn = () => {
@@ -71,6 +72,14 @@ const Setting: React.FC<{}> = () => {
     }
   }, [userData]);
 
+  const handleNavigateToFans = useCallback(() => {
+    navigate('UserFans', { id: accountStore.currentAccount?.id });
+  }, []);
+
+  const handleNavigateToFollowing = useCallback(() => {
+    navigate('UserFollow', { id: accountStore.currentAccount?.id });
+  }, []);
+
   return (
     <Animated.ScrollView
       style={{
@@ -104,14 +113,14 @@ const Setting: React.FC<{}> = () => {
               <Text style={styles.msg_number}>{stringAddComma(userData?.statuses_count)}</Text>
               <Text style={styles.msg}>嘟文</Text>
             </View>
-            <View style={styles.actItem}>
+            <TouchableOpacity style={styles.actItem} onPress={handleNavigateToFollowing}>
               <Text style={styles.msg_number}>{stringAddComma(userData?.following_count)}</Text>
               <Text style={styles.msg}>关注</Text>
-            </View>
-            <View style={styles.actItem}>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.actItem} onPress={handleNavigateToFans}>
               <Text style={styles.msg_number}>{stringAddComma(userData?.followers_count)}</Text>
               <Text style={styles.msg}>粉丝</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
