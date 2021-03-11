@@ -53,7 +53,7 @@ export const getFavouritesById = (params: string = ''): Promise<Array<Timelines>
 export const getRelationships = (id: string[] | string): Promise<Array<Relationship>> => {
   let url = '/api/v1/accounts/relationships?';
   if(Array.isArray(id)) {
-    url += id.map(item => `id=${item}`).join('&');
+    url += id.map(item => `id[]=${item}`).join('&');
   } else {
     url = url + 'id=' + id;
   }

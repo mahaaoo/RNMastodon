@@ -1,20 +1,27 @@
-import React from 'react';
-import { View, StyleSheet, Image, Text } from "react-native";
-import { Notification } from "../../config/interface";
+import React, { useCallback } from 'react';
+import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
+import { Notification, Relationship } from "../../config/interface";
 import Screen from "../../config/screen";
 import Colors from "../../config/colors";
 import Avatar from "../../components/Avatar";
 import FollowButton from "../../components/FollowButton";
 import SplitLine from "../../components/SplitLine";
+import { navigate } from "../../utils/rootNavigation";
 
 interface FollowItemProps {
-  item: Notification
+  item: Notification,
+  relationships: Relationship[] | undefined,
 }
 
 const FollowItem: React.FC<FollowItemProps> = (props) => {
-  const { item } = props;
+  const { item, relationships } = props;
+
+  const handleNavigation = useCallback(() => {
+    navigate('User', { id: item.account?.id })
+  }, [item]);
+
   return(
-    <View style={styles.main}>
+    <TouchableOpacity style={styles.main} onPress={handleNavigation}>
       <View style={styles.content}>
         <View style={styles.typeLogo}>
           <Image source={require("../../images/notify_user.png")} style={{ width: 28, height: 22 }} />
@@ -24,7 +31,10 @@ const FollowItem: React.FC<FollowItemProps> = (props) => {
           <View style={styles.users}>
             <View style={styles.avatarContainer}>
               <Avatar url={item.account?.avatar} size={55} />
-              <FollowButton />
+              <FollowButton 
+                relationships={relationships}
+                id={item.account?.id}
+              />
             </View>
             <Text style={styles.displayName}>{item.account?.display_name || item.account?.username}</Text>
             <Text style={styles.acct}>@{item.account?.acct}</Text>
@@ -32,7 +42,7 @@ const FollowItem: React.FC<FollowItemProps> = (props) => {
         </View>
       </View>
       <SplitLine start={0} end={Screen.width} />
-    </View>
+    </TouchableOpacity>
   )
 }
 

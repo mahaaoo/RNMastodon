@@ -10,10 +10,18 @@ import FollowItem from "./followItem";
 import FavouriteItem from "./favouriteItem";
 import MetionItem from "./metionItem";
 import { getNotifications } from "../../server/notifications";
+import { getRelationships } from "../../server/account";
 
 const fetchNotifications = () => {
   const fn = (param: string) => {
     return getNotifications(param);
+  }
+  return fn;
+}
+
+const fetchRelationships = () => {
+  const fn = (id: string[]) => {
+    return getRelationships(id);
   }
   return fn;
 }
@@ -24,6 +32,8 @@ interface AllNotifyProps {
 const AllNotify: React.FC<AllNotifyProps> = (props) => {
 
   const { data: notifications, run: getNotifications } = useRequest(fetchNotifications(), { loading: false, manual: true }); // 获取用户发表过的推文
+  const { data: relationships, run: getRelationship } = useRequest(fetchRelationships(), { manual: true, loading: false }); // 获取用户的个人信息
+
   const [dataSource, setDataSource] = useState<Notification[]>([]);
   const [listStatus, setListStatus] = useState<RefreshState>(RefreshState.Idle);
 
@@ -34,6 +44,12 @@ const AllNotify: React.FC<AllNotifyProps> = (props) => {
   useEffect(() => {
     // 每当请求了新数据，都将下拉刷新状态设置为false
     if(notifications) {
+      // 获取所有关注你的人，与你的relationship
+      const followIds = notifications.map(item => item.account?.id);
+      if(followIds.length > 0) {
+        getRelationship(followIds)
+      }
+      
       if (listStatus === RefreshState.HeaderRefreshing || listStatus === RefreshState.Idle) {
         setDataSource(notifications);
       }
@@ -68,7 +84,7 @@ const AllNotify: React.FC<AllNotifyProps> = (props) => {
         data={dataSource}
         renderItem={({ item }) => {
           if (item?.type === "follow") {
-            return <FollowItem item={item} />
+            return <FollowItem item={item} relationships={relationships} />
           }
           if (item?.type === "favourite") {
             return <FavouriteItem item={item} />
@@ -91,6 +107,8 @@ const styles = StyleSheet.create({
   main: {
     backgroundColor: Colors.pageDefaultBackground,
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });
 
