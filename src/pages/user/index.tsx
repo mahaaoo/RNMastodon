@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Animated } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import HTML from "react-native-render-html";
 // @ts-ignore
 import ScrollableTabView from "react-native-scrollable-tab-view";
 import MyTabBar from "../../components/ScrollableTabBar/defaultTabBar";
@@ -27,6 +26,7 @@ import UseLine from "./userLine";
 import Favourites from "./favourites";
 import { replaceContentEmoji } from "../../utils/emoji";
 import { navigate } from "../../utils/rootNavigation";
+import HTMLContent from '../../components/HTMLContent';
 
 const fetchUserById = (id: string = '') => {
   const fn = () => {
@@ -41,19 +41,6 @@ const fetchRelationships = (id: string) => {
   }
   return fn;
 }
-
-const tagsStyles = { 
-  p: {
-    fontSize: 16,
-    lineHeight: 20
-  },
-  a: {
-    fontSize: 16,
-    lineHeight: 20,
-    textDecorationLine: 'none',
-    color: Colors.linkTagColor,
-  }
-};
 
 interface UserProps extends StackScreenProps<any> {
 }
@@ -151,7 +138,7 @@ const User: React.FC<UserProps> = (props) => {
               <LineItemName displayname={userData?.display_name} emojis={userData?.emojis} fontSize={18} />
               <Text style={styles.acct}><Text>@</Text>{userData?.acct}</Text>
             </View>
-            <HTML source={{ html: replaceContentEmoji(userData?.note, userData?.emojis) }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 10 }} />
+            <HTMLContent html={replaceContentEmoji(userData?.note, userData?.emojis)} />
             <View style={styles.act}>
               <Text style={styles.msg_number}>{stringAddComma(userData?.statuses_count)}<Text style={styles.msg}>&nbsp;嘟文</Text></Text>
               <Text onPress={handleNavigateToFollowing} style={[styles.msg_number, { marginLeft: 10 }]}>{stringAddComma(userData?.following_count)}<Text style={styles.msg}>&nbsp;关注</Text></Text>

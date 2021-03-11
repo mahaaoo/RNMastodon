@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import HTML from "react-native-render-html";
 
 import { Account } from "../../config/interface";
 import Avatar from "../../components/Avatar";
@@ -10,23 +9,11 @@ import SplitLine from "../../components/SplitLine";
 import Screen from "../../config/screen";
 import { replaceContentEmoji } from "../../utils/emoji";
 import { navigate } from "../../utils/rootNavigation";
+import HTMLContent from "../../components/HTMLContent";
 
 interface UserItemProps {
   item: Account
 }
-
-const tagsStyles = { 
-  p: {
-    fontSize: 16,
-    lineHeight: 20
-  },
-  a: {
-    fontSize: 16,
-    lineHeight: 20,
-    textDecorationLine: 'none',
-    color: Colors.linkTagColor,
-  }
-};
 
 const UserItem: React.FC<UserItemProps> = (props) => {
   const { item } = props;
@@ -42,9 +29,11 @@ const UserItem: React.FC<UserItemProps> = (props) => {
           <Avatar url={item.avatar} />
         </View>
         <View style={styles.content}>
-          <LineItemName displayname={item?.display_name || item?.username} emojis={item?.emojis} fontSize={18} />
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <LineItemName displayname={item?.display_name || item?.username} emojis={item?.emojis} fontSize={18} />
+          </View>
           <Text style={styles.acct}><Text>@</Text>{item?.acct}</Text>
-          <HTML source={{ html: replaceContentEmoji(item?.note, item?.emojis) }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 10 }} />
+          <HTMLContent html={replaceContentEmoji(item?.note, item?.emojis)} />
         </View>
       </View>
       <SplitLine start={0} end={Screen.width} />

@@ -4,10 +4,10 @@ import { Notification } from "../../config/interface";
 import Screen from "../../config/screen";
 import Colors from "../../config/colors";
 import Avatar from "../../components/Avatar";
-import HTML from "react-native-render-html";
 import SplitLine from "../../components/SplitLine";
 import LineItemName from "../home/LineItemName";
 import { replaceContentEmoji } from "../../utils/emoji";
+import HTMLContent from '../../components/HTMLContent';
 
 const tagsStyles = {
   p: {
@@ -21,19 +21,6 @@ const tagsStyles = {
     textDecorationLine: 'none',
     color: Colors.grayTextColor
   }
-};
-
-const renderer = {
-	img: (htmlAttribs: any) => {
-		return (
-      <Image
-        key={htmlAttribs.src}
-        style={{height: 16, width: 16, alignSelf: 'stretch' }}
-        resizeMode='contain'
-        source={{uri: htmlAttribs.src}}
-      />
-    )
-	},
 };
 
 interface FavouriteItemProps {
@@ -50,16 +37,14 @@ const FavouriteItem: React.FC<FavouriteItemProps> = (props) => {
         </View>
         <View style={styles.right}>
           <Avatar url={item.account?.avatar} />
-          <Text style={styles.username}>
+          <Text style={styles.username} numberOfLines={1} ellipsizeMode="tail">
             <LineItemName displayname={item.account?.display_name || item.account?.username} emojis={item.account?.emojis} fontSize={15} />
             <Text style={styles.explan}>&nbsp; 喜欢了你的嘟文</Text>
           </Text>
-          <HTML 
-              source={{ html: replaceContentEmoji(item.status?.content, item.status?.emojis) }} 
-              tagsStyles={tagsStyles} 
-              containerStyle={{ paddingVertical: 15 }}
-              renderers={renderer}
-            />
+          <HTMLContent 
+            html={replaceContentEmoji(item.status?.content, item.status?.emojis)}
+            tagsStyles={tagsStyles}
+          />
         </View>
       </View>
       <SplitLine start={0} end={Screen.width} />
@@ -78,8 +63,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   username: {
-    fontWeight: 'bold',
-    fontSize: 15,
     marginTop: 10,
   },
   explan: {

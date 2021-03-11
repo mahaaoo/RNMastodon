@@ -19,7 +19,7 @@ const LineItemName:  React.FC<LineItemNameProps> = (props) => {
   }, [displayname, emojis]);
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <>
       {name.map((item, index) => {
         return !item.image ? <Text style={{fontSize: fontSize, fontWeight: 'bold'}} key={`HomeLineItemName${index}`}>{item.text}</Text> : 
         <FastImage
@@ -32,7 +32,7 @@ const LineItemName:  React.FC<LineItemNameProps> = (props) => {
           resizeMode={FastImage.resizeMode.cover}
         />      
       })}
-    </View>
+    </>
   );
 }
 

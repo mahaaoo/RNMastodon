@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { View, Text, StyleSheet, Animated, TouchableOpacity } from "react-native";
-import HTML from "react-native-render-html";
 
 import Screen from "../../config/screen";
 import Colors from "../../config/colors";
@@ -17,6 +16,7 @@ import { getAccountsById } from "../../server/account";
 import LineItemName from "../home/LineItemName";
 import { replaceContentEmoji } from "../../utils/emoji";
 import { navigate } from "../../utils/rootNavigation";
+import HTMLContent from "../../components/HTMLContent";
 
 const fetchUserById = (id: string = '') => {
   const fn = () => {
@@ -24,19 +24,6 @@ const fetchUserById = (id: string = '') => {
   }
   return fn;
 }
-
-const tagsStyles = { 
-  p: {
-    fontSize: 16,
-    lineHeight: 20
-  },
-  a: {
-    fontSize: 16,
-    lineHeight: 20,
-    textDecorationLine: 'none',
-    color: Colors.linkTagColor,
-  }
-};
 
 const IMAGEHEIGHT = 150; // 顶部下拉放大图片的高度
 const PULLOFFSETY = 100; // 下拉刷新的触发距离
@@ -107,7 +94,7 @@ const Setting: React.FC<{}> = () => {
             <LineItemName displayname={userData?.display_name || userData?.username} emojis={userData?.emojis} fontSize={18} />
             <Text style={styles.acct}><Text>@</Text>{userData?.acct}</Text>
           </View>
-          <HTML source={{ html: replaceContentEmoji(userData?.note, userData?.emojis) }} tagsStyles={tagsStyles} containerStyle={{ paddingVertical: 10 }} />
+          <HTMLContent html={replaceContentEmoji(userData?.note, userData?.emojis)} />
           <View style={styles.act}>
             <View style={styles.actItem}>
               <Text style={styles.msg_number}>{stringAddComma(userData?.statuses_count)}</Text>
