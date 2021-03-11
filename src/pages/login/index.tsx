@@ -4,7 +4,7 @@ import { View, Text, TextInput, StyleSheet, SafeAreaView } from "react-native";
 import Button from "../../components/Button";
 import Color from "../../config/colors";
 import Screen from "../../config/screen";
-import { goBack, navigate } from "../../utils/rootNavigation";
+import { goBack, navigate, reset } from "../../utils/rootNavigation";
 import { useRequest } from "../../utils/hooks";
 import { getAppConfig, getToken } from "../../server/app";
 import ToastModal from "../../components/Modal/toastModal";
@@ -50,6 +50,7 @@ const Login: React.FC<{}> = () => {
       console.log("获取到的token信息");
       appStore.setHostUrl("https://" + path);
       appStore.setToken(tokenData.access_token);
+      reset("TabRoute");
     }
   }, [tokenData])
 

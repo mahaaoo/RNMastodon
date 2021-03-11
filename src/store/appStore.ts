@@ -2,8 +2,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { makeAutoObservable, runInAction } from 'mobx'
 
 class AppStore {
-  hostUrl: string = '';
-  token: string = '';
+  hostUrl: string|undefined= undefined
+  token: string|undefined = undefined;
 
   constructor() {
     makeAutoObservable(this);
@@ -23,6 +23,9 @@ class AppStore {
     const localHostUrl = await AsyncStorage.getItem('host_url') || '';
     const localToekn = await AsyncStorage.getItem('access_token') || '';
     
+    console.log(localHostUrl)
+    console.log(localToekn)
+
     runInAction(() => {
       this.hostUrl = localHostUrl;
       this.token = localToekn;  

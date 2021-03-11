@@ -44,7 +44,8 @@ const Home: React.FC<{}> = () => {
   }, [status, listData]);
 
   useEffect(() => {
-    if(appStore.hostUrl.length > 0 && appStore.token.length > 0) {
+    console.log("加载了本地的数据");
+    if(appStore?.hostUrl && appStore?.token && appStore?.hostUrl?.length > 0 && appStore?.token?.length > 0) {
       fetchVerifyToken();
     } else {
       navigate("Guide");
