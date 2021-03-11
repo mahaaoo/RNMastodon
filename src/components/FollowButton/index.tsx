@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useCallback, useRef, memo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 import Colors from "../../config/colors";
@@ -56,34 +56,39 @@ const FollowButton: React.FC<FollowButtonProps> = (props) => {
   }, [relationships]);
 
   useEffect(() => {
-    if(followData || unFollowData) {
-      console.log("得到了最新的关系");
-      setRelationship(followData || unFollowData)
+    if(followData) {
+      setRelationship(followData);
     }
-  }, [followData, unFollowData])
+  }, [followData])
 
   useEffect(() => {
-    console.log("根据关系或得状态");
+    if(unFollowData) {
+      setRelationship(unFollowData);
+    }
+  }, [unFollowData])
 
-    const followed = relationship?.followed_by;
-    const following = relationship?.following;
-
-    if(!followed && !following) {
-      // 既没有关注他、也没有被他关注
-      setButtonStatus(FollowButtonStatus.UnFollow);
+  useEffect(() => {
+    if (relationship) {
+      const followed = relationship?.followed_by;
+      const following = relationship?.following;
+  
+      if(!followed && !following) {
+        // 既没有关注他、也没有被他关注
+        setButtonStatus(FollowButtonStatus.UnFollow);
+      }
+      if(followed && !following) {
+        // 他是你的粉丝
+        setButtonStatus(FollowButtonStatus.UnFollow);
+      }
+      if(!followed && following) {
+        // 仅仅关注他了
+        setButtonStatus(FollowButtonStatus.Following);
+      }
+      if(followed && following) {
+        // 既关注他、也被他关注、互关好友
+        setButtonStatus(FollowButtonStatus.BothFollow);
+      }      
     }
-    if(followed && !following) {
-      // 他是你的粉丝
-      setButtonStatus(FollowButtonStatus.UnFollow);
-    }
-    if(!followed && following) {
-      // 仅仅关注他了
-      setButtonStatus(FollowButtonStatus.Following);
-    }
-    if(followed && following) {
-      // 既关注他、也被他关注、互关好友
-      setButtonStatus(FollowButtonStatus.BothFollow);
-    }    
   }, [relationship])
 
   const prevCount = prevContentRef.current;
@@ -173,12 +178,11 @@ const FollowButton: React.FC<FollowButtonProps> = (props) => {
     }
     setButtonStatus(FollowButtonStatus.Requesting);
   }, [buttonStatus]);
-  
-  console.log("重新渲染了", buttonStatus)
+
   return (
     <TouchableOpacity onPress={handleOnPress} style={[styles.out_view, content.buttonStyle]}>
       {
-        buttonStatus === FollowButtonStatus.Requesting ? 
+        buttonStatus == 3 ? 
         <ActivityIndicator animating={buttonStatus === FollowButtonStatus.Requesting} color={content.indicatorColor} /> : 
         <Text style={content.textStyle}>
           {content.buttonText}
