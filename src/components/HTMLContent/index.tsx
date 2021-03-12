@@ -1,5 +1,5 @@
 import React from "react";
-import { Image } from "react-native";
+import { Image, Text } from "react-native";
 import HTML from "react-native-render-html";
 import Colors from "../../config/colors";
 
@@ -49,6 +49,9 @@ const HTMLContent: React.FC<HTMLContentProps> = (props) => {
       tagsStyles={tagsStyles || defaultTagsStyles} 
       containerStyle={{ paddingVertical: 15 }}
       renderers={renderer}
+      onLinkPress={(re, href) => {
+        console.log(href);
+      }}
     />
   )
 }

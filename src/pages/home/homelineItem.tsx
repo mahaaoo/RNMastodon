@@ -12,6 +12,8 @@ import LineItemName from "./LineItemName";
 import NinePicture from "../../components/NinePicture";
 import { replaceContentEmoji } from "../../utils/emoji";
 import HTMLContent from "../../components/HTMLContent";
+import ToolBar from "./toolBar";
+import WebCard from "./webCard";
 
 interface HomeLineItemProps {
   item: Timelines,
@@ -78,22 +80,17 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
           </View>
         </View>
         <HTMLContent html={replaceContentEmoji(showItem?.content, showItem?.emojis)} />
-        <NinePicture imageList={showItem.media_attachments} />        
+        <NinePicture imageList={showItem?.media_attachments} />        
+        {
+          showItem?.media_attachments?.length === 0 ? <WebCard card={showItem?.card} /> : null
+        }
         <SplitLine start={0} end={Screen.width - 30} />
-        <View style={styles.tool}>
-          <View style={styles.tool_item}>
-            <Image source={require("../../images/turn.png")} style={{ width: 24, height: 22 }} />
-            <Text style={styles.tool_title}>转发</Text>
-          </View>
-          <View style={styles.tool_item}>
-            <Image source={require("../../images/comment.png")} style={{ width: 20, height: 18 }} />
-            <Text style={styles.tool_title}>转评</Text>
-          </View>
-          <View style={styles.tool_item}>
-            <Image source={require("../../images/like.png")} style={{ width: 20, height: 20 }} />
-            <Text style={styles.tool_title}>赞</Text>
-          </View>
-        </View>
+        <ToolBar
+          favourited={showItem?.favourited}
+          favourites_count={showItem?.favourites_count}
+          reblogs_count={showItem?.reblogs_count}
+          replies_count={showItem?.replies_count}
+        />        
       </View>
     </View>
   )
@@ -127,29 +124,6 @@ const styles = StyleSheet.create({
   name: {
     justifyContent: 'center',
     flex: 1,
-  },
-  tool: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-  },
-  tool_item: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tool_title: {
-    fontSize: 16, 
-    color: Colors.commonToolBarText, 
-    marginLeft: 2,
-  },
-  play_button: {
-    position: 'absolute', 
-    bottom: 20, 
-    right: 20, 
-    width: 55, 
-    height: 55
   }
 })
 

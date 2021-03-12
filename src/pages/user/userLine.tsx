@@ -53,7 +53,7 @@ const UserLine: React.FC<UserLineProps> = (props) => {
       }
       if(listStatus === RefreshState.FooterRefreshing) {
         const maxId = dataSource[0]?.id;
-        if(userStatus[0].id < maxId) {
+        if(userStatus[0]?.id < maxId) {
           setDataSource(listData => listData.concat(userStatus));
         }
 

@@ -7,9 +7,7 @@ import Colors from "../../config/colors";
 import LineItemName from '../home/LineItemName';
 import SplitLine from "../../components/SplitLine";
 import Screen from "../../config/screen";
-import { replaceContentEmoji } from "../../utils/emoji";
 import { navigate } from "../../utils/rootNavigation";
-import HTMLContent from "../../components/HTMLContent";
 
 interface UserItemProps {
   item: Account
@@ -33,7 +31,6 @@ const UserItem: React.FC<UserItemProps> = (props) => {
             <LineItemName displayname={item?.display_name || item?.username} emojis={item?.emojis} fontSize={18} />
           </View>
           <Text style={styles.acct}><Text>@</Text>{item?.acct}</Text>
-          <HTMLContent html={replaceContentEmoji(item?.note, item?.emojis)} />
         </View>
       </View>
       <SplitLine start={0} end={Screen.width} />
