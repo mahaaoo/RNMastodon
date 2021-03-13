@@ -17,20 +17,25 @@ import WebCard from "./webCard";
 
 interface HomeLineItemProps {
   item: Timelines,
+  needToolbar?: boolean, // 是否显示转发工具条
 }
 
 const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
-  const { item } = props;
-  const showItem = item.reblog || item ;
+  const { item, needToolbar = true } = props;
+  const showItem = item?.reblog || item ;
 
   const handleAvatar = useCallback(() => {
-    navigate('User', { id: item.account.id })
+    navigate('User', { id: item?.account.id })
   }, [item]);
 
+  const handleNavigation = useCallback(() => {
+    needToolbar && navigate('StatusDetail', { id: item?.id });
+  }, [needToolbar]);
+
   return(
-    <View style={styles.main} key={showItem.id}>
+    <TouchableOpacity activeOpacity={needToolbar? 0.2 : 1 } style={styles.main} key={showItem.id} onPress={handleNavigation}>
       {
-        item.reblog ?
+        item?.reblog ?
         <View style={styles.status}>
           <Image source={require("../../images/turn_white.png")} style={{ width: 24, height: 22 }} />
           <Text style={{ color: Colors.defaultWhite, marginLeft: 2 }}>{item.account?.display_name || item.account?.username}  转发了</Text>
@@ -38,7 +43,7 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
         : null
       }
       {
-        item.in_reply_to_id ?
+        item?.in_reply_to_id ?
         <View style={styles.status}>
           <Image source={require("../../images/comment_white.png")} style={{ width: 20, height: 18 }} />
           <Text style={{ color: Colors.defaultWhite, marginLeft: 2 }}>{item.account?.display_name || item.account?.username}  转评了</Text>
@@ -85,14 +90,17 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
           showItem?.media_attachments?.length === 0 ? <WebCard card={showItem?.card} /> : null
         }
         <SplitLine start={0} end={Screen.width - 30} />
-        <ToolBar
-          favourited={showItem?.favourited}
-          favourites_count={showItem?.favourites_count}
-          reblogs_count={showItem?.reblogs_count}
-          replies_count={showItem?.replies_count}
-        />        
+        {
+          needToolbar ? 
+          <ToolBar
+            favourited={showItem?.favourited}
+            favourites_count={showItem?.favourites_count}
+            reblogs_count={showItem?.reblogs_count}
+            replies_count={showItem?.replies_count}
+          /> : null    
+        }
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
@@ -109,7 +117,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   main: {
-    flex: 1,
     backgroundColor: Colors.defaultWhite,
     marginBottom: 10,
     width: Screen.width

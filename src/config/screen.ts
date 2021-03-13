@@ -7,4 +7,5 @@ export default {
   height: Dimensions.get("window").height,
   onePixel: 1 / PixelRatio.get(),
   top: Theme.screenInset.top,
+  bottom: Theme.screenInset.bottom,
 };

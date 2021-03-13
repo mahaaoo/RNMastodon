@@ -6,7 +6,7 @@ import WebView from "./webView";
 import User from "./user";
 import UserFans from "./fans/userFans";
 import UserFollow from "./fans/userFollow";
-
+import StatusDetail from "./statusDetail";
 
 export interface RouteParams {
   name: string;
@@ -55,6 +55,13 @@ const routes: Array<RouteParams> = [
     component: UserFollow,
     options: {
       title: '正在关注',
+    }
+  },
+  {
+    name: 'StatusDetail',
+    component: StatusDetail,
+    options: {
+      title: '嘟文详情',
     }
   }
 ]
