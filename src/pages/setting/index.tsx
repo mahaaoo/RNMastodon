@@ -67,6 +67,10 @@ const Setting: React.FC<{}> = () => {
     navigate('UserFollow', { id: accountStore.currentAccount?.id });
   }, []);
 
+  const handleToTest = useCallback(() => {
+    navigate('Test');
+  }, []);
+
   return (
     <Animated.ScrollView
       style={{
@@ -86,9 +90,9 @@ const Setting: React.FC<{}> = () => {
       <View style={styles.header}>
         <View style={{ paddingHorizontal: 18 }}>
           <View style={styles.title}>
-            <View style={styles.avatar}>
+            <TouchableOpacity onPress={handleToTest} style={styles.avatar}>
               <Avatar url={userData?.avatar} size={65} borderColor={"#fff"} borderWidth={4} />
-            </View>
+            </TouchableOpacity>
           </View>
           <View>
             <LineItemName displayname={userData?.display_name || userData?.username} emojis={userData?.emojis} fontSize={18} />

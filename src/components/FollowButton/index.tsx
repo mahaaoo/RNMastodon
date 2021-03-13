@@ -182,7 +182,7 @@ const FollowButton: React.FC<FollowButtonProps> = (props) => {
   return (
     <TouchableOpacity onPress={handleOnPress} style={[styles.out_view, content.buttonStyle]}>
       {
-        buttonStatus == 3 ? 
+        buttonStatus == FollowButtonStatus.Requesting ? 
         <ActivityIndicator animating={buttonStatus === FollowButtonStatus.Requesting} color={content.indicatorColor} /> : 
         <Text style={content.textStyle}>
           {content.buttonText}

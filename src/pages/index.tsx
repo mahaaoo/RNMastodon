@@ -7,6 +7,7 @@ import User from "./user";
 import UserFans from "./fans/userFans";
 import UserFollow from "./fans/userFollow";
 import StatusDetail from "./statusDetail";
+import Test from "./test";
 
 export interface RouteParams {
   name: string;
@@ -62,6 +63,13 @@ const routes: Array<RouteParams> = [
     component: StatusDetail,
     options: {
       title: '嘟文详情',
+    }
+  },
+  {
+    name: 'Test',
+    component: Test,
+    options: {
+      title: '测试页面',
     }
   }
 ]
