@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { observer } from "mobx-react";
 import { useStores } from "../../store";
 
@@ -14,6 +14,7 @@ import RefreshList, { RefreshState } from "../../components/RefreshList";
 import HomeLineItem from "./homelineItem";
 import Colors from "../../config/colors";
 import DefaultLineItem from "./defaultLineItem";
+import Screen from "../../config/screen";
 
 const fetchHomeLine = () => {
   const fn = (params: string) => {
@@ -44,7 +45,6 @@ const Home: React.FC<{}> = () => {
   }, [status, listData]);
 
   useEffect(() => {
-    console.log("加载了本地的数据");
     if(appStore?.hostUrl && appStore?.token && appStore?.hostUrl?.length > 0 && appStore?.token?.length > 0) {
       fetchVerifyToken();
     } else {
@@ -73,6 +73,10 @@ const Home: React.FC<{}> = () => {
     }
   }, [ homeLineData ]);
   
+  const publishNewStatue = useCallback(() => {
+    navigate("Publish");
+  }, []);
+
   return (
     <View style={styles.main}>
       <RefreshList
@@ -88,6 +92,9 @@ const Home: React.FC<{}> = () => {
         onFooterRefresh={handleLoadMore}
         refreshState={status}
      />
+      <TouchableOpacity style={styles.new} onPress={publishNewStatue}>
+        <Image source={require("../../images/message.png")} style={{ width: 35, height: 35 }} />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -98,12 +105,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.pageDefaultBackground,
+    width: Screen.width,
   },
   loading: {
     flex: 1, 
     backgroundColor: Colors.pageDefaultBackground, 
     justifyContent: 'center', 
     alignItems: 'center',
+  },
+  new: {
+    position: 'absolute',
+    right: 20, 
+    bottom: 20,
+    height: 70,
+    width: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.theme,
+    borderRadius: 35,
   }
 });
 

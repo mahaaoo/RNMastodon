@@ -7,6 +7,8 @@ import User from "./user";
 import UserFans from "./fans/userFans";
 import UserFollow from "./fans/userFollow";
 import StatusDetail from "./statusDetail";
+import Publish from "./publish";
+
 import Test from "./test";
 
 export interface RouteParams {
@@ -71,7 +73,15 @@ const routes: Array<RouteParams> = [
     options: {
       title: '测试页面',
     }
-  }
+  },
+  {
+    name: 'Publish',
+    component: Publish,
+    options: {
+      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+      title: '发送嘟文',
+    }
+  },
 ]
 
 export default routes;
