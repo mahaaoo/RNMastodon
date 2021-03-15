@@ -38,12 +38,14 @@ const routes: Array<RouteParams> = [
   {
     name: 'WebView',
     component: WebView,
+    cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
   },
   {
     name: 'User',
     component: User,
     options: {
       header: () => null,
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
     }
   },
   {
@@ -51,6 +53,7 @@ const routes: Array<RouteParams> = [
     component: UserFans,
     options: {
       title: '粉丝',
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
     }
   },
   {
@@ -58,6 +61,7 @@ const routes: Array<RouteParams> = [
     component: UserFollow,
     options: {
       title: '正在关注',
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
     }
   },
   {
@@ -65,6 +69,7 @@ const routes: Array<RouteParams> = [
     component: StatusDetail,
     options: {
       title: '嘟文详情',
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
     }
   },
   {

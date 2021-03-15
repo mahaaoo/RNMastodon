@@ -30,7 +30,7 @@ const WebCard: React.FC<WebCardProps> = (props) => {
           <Text numberOfLines={1} style={{ fontSize: 16, fontWeight: 'bold'}}>{card?.title}</Text>
         </View>
         <View style={{ flex: 1, marginHorizontal: 8 }}> 
-          <Text ellipsizeMode={"tail"}>{card?.description}</Text>
+          <Text ellipsizeMode={"tail"} numberOfLines={3} style={{ lineHeight: 17 }}>{card?.description}</Text>
         </View>
         <View style={{ marginHorizontal: 8, marginVertical: 5 }}> 
           <Text numberOfLines={1} style={{ color: Colors.grayTextColor }}>{card?.url}</Text>

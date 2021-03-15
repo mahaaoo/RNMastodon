@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import Screen from "../config/screen";
 

@@ -75,7 +75,7 @@ const Setting: React.FC<{}> = () => {
     <Animated.ScrollView
       style={{
         flex: 1,
-        backgroundColor: Colors.pageDefaultBackground
+        backgroundColor: Colors.pageDefaultBackground, 
       }}
       bounces={true}
       onScroll={Animated.event([{ nativeEvent: 
