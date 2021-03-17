@@ -96,7 +96,7 @@ const Publish: React.FC<PublishProps> = () => {
   }, [scrollHeight]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.defaultWhite }}>
+    <View style={styles.main}>
       <View style={{ flexDirection: 'row'}}>
         <View style={{ marginLeft: 10, marginTop: 10 }}>
           <Avatar url={accountStore.currentAccount?.avatar} />
@@ -104,7 +104,7 @@ const Publish: React.FC<PublishProps> = () => {
         <TextInput 
           ref={InputRef}
           autoFocus={true} 
-          style={{ flex: 1, height: Screen.height / 3, fontSize: 18, marginHorizontal: 10, marginTop: 10 }} 
+          style={styles.input} 
           textAlignVertical={'top'}
           multiline = {true}
           numberOfLines = {4}
@@ -144,7 +144,7 @@ const Publish: React.FC<PublishProps> = () => {
                 <Image source={require("../../images/warning.png")} style={{ width: 33, height: 33 }} />
               </TouchableOpacity>
               <TouchableOpacity style={{ marginLeft: 20 }}>
-                <Image source={require("../../images/time.png")} style={{ width: 35, height: 35 }} />
+                <Image source={require("../../images/time.png")} style={{ width: 40, height: 35 }} />
               </TouchableOpacity>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -157,7 +157,7 @@ const Publish: React.FC<PublishProps> = () => {
           </View>
         </Animated.View>
         <View 
-          style={{ position: "absolute", bottom: Screen.bottom, width: Screen.width, height: scrollHeight, overflow: 'hidden' }}
+          style={[styles.flatlist, { height: scrollHeight }]}
         >
           <FlatList 
             horizontal={false}
@@ -185,6 +185,10 @@ const Publish: React.FC<PublishProps> = () => {
 }
 
 const styles = StyleSheet.create({
+  main: {
+    flex: 1, 
+    backgroundColor: Colors.defaultWhite
+  },
   header: {
     paddingVertical: 0,
     height: 34,
@@ -199,6 +203,19 @@ const styles = StyleSheet.create({
     width: Screen.width,
     backgroundColor: '#fff',
     position: 'absolute',
+  },
+  input: {
+    flex: 1, 
+    height: Screen.height / 3, 
+    fontSize: 18, 
+    marginHorizontal: 10,
+    marginTop: 10
+  },
+  flatlist: {
+    position: "absolute", 
+    bottom: Screen.bottom, 
+    width: Screen.width,
+    overflow: 'hidden'
   }
 })
 
