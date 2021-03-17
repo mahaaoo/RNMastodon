@@ -18,7 +18,7 @@ const Button: React.FC<ButtonType> = (props) => {
 
   const handlePress = useDebounce(() => {
     onPress && onPress();
-  }, 500, [onPress]);
+  }, 300, [onPress]);
 
   return (
     <TouchableOpacity onPress={handlePress} style={[styles.out_view, style]}>

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Text, View } from "react-native";
+import { Text } from "react-native";
 import FastImage from "react-native-fast-image";
 
 import { Emoji } from "../../config/interface";

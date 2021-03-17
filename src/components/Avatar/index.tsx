@@ -5,7 +5,7 @@ import FastImage from 'react-native-fast-image'
 import Screen from "../../config/screen";
 
 interface AvatarProps {
-  url: string,
+  url: string | undefined,
   size?: number,
   borderColor?: string,
   borderWidth?: number,
