@@ -9,3 +9,11 @@ export const getStatusesById = (id: string = ''): Promise<Timelines> => {
   
   return request(url, MethodType.GET);
 }
+
+// https://mastodon.example/api/v1/statuses
+// 发表一个推文
+export const postNewStatuses = (params: Object): Promise<Timelines> => {
+  const url = '/api/v1/statuses';
+
+  return request(url, MethodType.POST, params);
+}
