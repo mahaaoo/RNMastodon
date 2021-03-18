@@ -7,7 +7,6 @@ import MyTabBar from "../../components/ScrollableTabBar/defaultTabBar";
 
 import Screen from "../../config/screen";
 import Colors from "../../config/colors";
-import { useStores } from "../../store";
 
 import { stringAddComma } from "../../utils/string";
 import { useRequest } from "../../utils/hooks";
@@ -23,7 +22,6 @@ import FollowButton from "../../components/FollowButton";
 import { getAccountsById, getStatusesById, getStatusesReplyById, getStatusesMediaById, getStatusesPinById, getRelationships } from "../../server/account";
 import LineItemName from "../home/LineItemName";
 import UseLine from "./userLine";
-import Favourites from "./favourites";
 import { replaceContentEmoji } from "../../utils/emoji";
 import { navigate } from "../../utils/rootNavigation";
 import HTMLContent from '../../components/HTMLContent';
@@ -50,8 +48,6 @@ const HEADERHEIGHT = 104; // 上滑逐渐显示的Header的高度
 const PULLOFFSETY = 100; // 下拉刷新的触发距离
 
 const User: React.FC<UserProps> = (props) => {
-  const {accountStore} = useStores();
-
   const scrollY: any = useRef(new Animated.Value(0)).current; //最外层ScrollView的滑动距离
 
   const { data: userData, run: getUserData } = useRequest(fetchUserById(props?.route?.params?.id), { manual: true, loading: true }); // 获取用户的个人信息
@@ -190,18 +186,6 @@ const User: React.FC<UserProps> = (props) => {
               onFinish={handleFinish}
               request={getStatusesMediaById}
             />
-            {
-              accountStore.currentAccount?.id == props?.route?.params?.id ? 
-              <Favourites 
-                tabLabel="喜欢"
-                scrollEnabled={!enableScrollViewScroll}  
-                onTop={handleSlide}
-                refreshing={refreshing}
-                onFinish={handleFinish}
-                id={props?.route?.params?.id}
-              />
-              : null
-            }
           </ScrollableTabView>
         </StickyHeader>
       </Animated.ScrollView>

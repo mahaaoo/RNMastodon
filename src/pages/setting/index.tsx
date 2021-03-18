@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
-import { View, Text, StyleSheet, Animated, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Animated, TouchableOpacity, Image } from "react-native";
 
 import Screen from "../../config/screen";
 import Colors from "../../config/colors";
@@ -17,6 +17,8 @@ import LineItemName from "../home/LineItemName";
 import { replaceContentEmoji } from "../../utils/emoji";
 import { navigate } from "../../utils/rootNavigation";
 import HTMLContent from "../../components/HTMLContent";
+import ListRow from "../../components/ListRow";
+import SpacingBox from "../../components/SpacingBox";
 
 const fetchUserById = (id: string = '') => {
   const fn = () => {
@@ -115,6 +117,14 @@ const Setting: React.FC<{}> = () => {
           </View>
         </View>
       </View>
+      <SpacingBox width={Screen.width} height={10} />
+      <ListRow 
+        leftIcon={<Image source={require("../../images/like.png")} style={{ width: 22, height: 22 }} />}
+        title="喜欢" 
+        onPress={() => {
+         navigate('Favourites');
+        }}
+      />
       <PullLoading 
         scrollY={scrollY} 
         refreshing={refreshing} 

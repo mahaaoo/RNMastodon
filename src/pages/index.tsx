@@ -8,6 +8,7 @@ import UserFans from "./fans/userFans";
 import UserFollow from "./fans/userFollow";
 import StatusDetail from "./statusDetail";
 import Publish from "./publish";
+import Favourites from "./setting/favourites";
 
 import Test from "./test";
 
@@ -85,6 +86,14 @@ const routes: Array<RouteParams> = [
     options: {
       cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
       title: '发送嘟文',
+    }
+  },
+  {
+    name: 'Favourites',
+    component: Favourites,
+    options: {
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      title: '我的喜欢',
     }
   },
 ]
