@@ -70,7 +70,7 @@ const Setting: React.FC<{}> = () => {
   }, []);
 
   const handleToTest = useCallback(() => {
-    navigate('Test');
+    navigate('User', { id: accountStore.currentAccount?.id });
   }, []);
 
   return (

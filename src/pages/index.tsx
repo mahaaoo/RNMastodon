@@ -10,8 +10,6 @@ import StatusDetail from "./statusDetail";
 import Publish from "./publish";
 import Favourites from "./setting/favourites";
 
-import Test from "./test";
-
 export interface RouteParams {
   name: string;
   component: React.ComponentType<any>;
@@ -71,13 +69,6 @@ const routes: Array<RouteParams> = [
     options: {
       title: '嘟文详情',
       cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-    }
-  },
-  {
-    name: 'Test',
-    component: Test,
-    options: {
-      title: '测试页面',
     }
   },
   {
