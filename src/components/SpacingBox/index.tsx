@@ -9,7 +9,7 @@ interface SpacingBoxProps {
 }
 
 const SpacingBox:React.FC<SpacingBoxProps> = (props) => {
-  const { height, color = Colors.pageDefaultBackground, width } = props;
+  const { height, color = Colors.defaultWhite, width } = props;
   return (
     <View style={{ width: width, height: height, backgroundColor: color }} />
   );

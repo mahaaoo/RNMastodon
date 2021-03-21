@@ -33,7 +33,7 @@ const HomeLineItem: React.FC<HomeLineItemProps> = (props) => {
   }, [needToolbar]);
 
   return(
-    <TouchableOpacity activeOpacity={needToolbar? 0.2 : 1 } style={styles.main} key={showItem.id} onPress={handleNavigation}>
+    <TouchableOpacity activeOpacity={1} style={styles.main} key={showItem.id} onPress={handleNavigation}>
       {
         item?.reblog ?
         <View style={styles.status}>

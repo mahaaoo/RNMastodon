@@ -1,11 +1,11 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useCallback } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 import Screen from '../../config/screen';
 import Colors from "../../config/colors";
 import { Card } from "../../config/interface";
-
+import { navigate } from "../../utils/rootNavigation";
 
 interface WebCardProps {
   card: Card
@@ -15,8 +15,14 @@ const WebCard: React.FC<WebCardProps> = (props) => {
   const { card } = props;
   if (!card || !card.image) return <></>;
 
+  const handleNavigation = useCallback(() => {
+    navigate("Link", {
+      url: card.url,
+    });
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity onPress={handleNavigation} style={styles.container}>
       <FastImage
         style={{ flex: 1 }}
         source={{
@@ -36,7 +42,7 @@ const WebCard: React.FC<WebCardProps> = (props) => {
           <Text numberOfLines={1} style={{ color: Colors.grayTextColor }}>{card?.url}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 

@@ -17,7 +17,7 @@ const MediaImage: React.FC<MediaImageProps> = (props) => {
   const { item, handleClick, index } = props;
 
   return (
-    <TouchableOpacity style={{ flex: 1 }} onPress={() => handleClick && handleClick(index)}>
+    <TouchableOpacity style={{ flex: 1 }} activeOpacity={1} onPress={() => handleClick && handleClick(index)}>
       <FastImage
         key={item.id}
         style={{ flex: 1 }}

@@ -93,7 +93,7 @@ const Home: React.FC<{}> = () => {
         refreshState={status}
      />
       <TouchableOpacity style={styles.new} onPress={publishNewStatue}>
-        <Image source={require("../../images/message.png")} style={{ width: 35, height: 35 }} />
+        <Image source={require("../../images/message.png")} style={{ width: 33, height: 33 }} />
       </TouchableOpacity>
     </View>
   );
@@ -117,8 +117,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 20, 
     bottom: 20,
-    height: 70,
-    width: 70,
+    height: 65,
+    width: 65,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.theme,

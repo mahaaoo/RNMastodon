@@ -9,6 +9,7 @@ import UserFollow from "./fans/userFollow";
 import StatusDetail from "./statusDetail";
 import Publish from "./publish";
 import Favourites from "./setting/favourites";
+import Link from "./link";
 
 export interface RouteParams {
   name: string;
@@ -85,6 +86,14 @@ const routes: Array<RouteParams> = [
     options: {
       cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
       title: '我的喜欢',
+    }
+  },
+  {
+    name: 'Link',
+    component: Link,
+    options: {
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      title: '详情',
     }
   },
 ]
