@@ -117,7 +117,7 @@ const Setting: React.FC<{}> = () => {
           </View>
         </View>
       </View>
-      <SpacingBox width={Screen.width} height={10} />
+      <SpacingBox width={Screen.width} height={10} color={Colors.pageDefaultBackground} />
       <ListRow 
         leftIcon={<Image source={require("../../images/like.png")} style={{ width: 22, height: 22 }} />}
         title="喜欢" 
